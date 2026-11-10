@@ -170,11 +170,7 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
  <div class="railstats" aria-label="Collection overview">
  <div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div>
  <div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div>
- <div class="railstat"><span>STRONG</span><b id="strongCount">0</b></div>
 </div>
- <button class="navbtn active" title="Watchlist" aria-label="Watchlist"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></button>
- 
- <button class="navbtn" id="navExport" title="Export backup" aria-label="Export backup"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5"/><path d="M5 17v3h14v-3"/></svg></button>
  <div class="railbottom"><button class="navbtn" id="navInfo" title="About signals" aria-label="About signals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></button></div>
 </aside>
 <main class="main">
@@ -188,7 +184,7 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 <aside class="side">
  <div class="sidehead">Overview</div>
  <div class="sidefoot">Price gap is a comparison, not estimated profit. Fees, grading outcome and selling costs are not included.</div>
- <div class="side-actions"><button id="export">↗ &nbsp; Export backup</button><button id="importBtn">↙ &nbsp; Import backup</button><button id="clearAll">⌫ &nbsp; Clear watchlist</button></div>
+ <div class="side-actions"><button id="importBtn">↙ &nbsp; Import backup</button><button id="clearAll">⌫ &nbsp; Clear watchlist</button></div>
 </aside>
 </div>
 <dialog id="modal"><form id="form"><div class="modalhead"><h2 id="modalTitle">Add card</h2><button class="close" type="button" id="close">✕</button></div><input type="hidden" id="editId">
@@ -214,7 +210,7 @@ async function save(){try{const r=await fetch('/api/cards',{method:'POST',header
 function render(){
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
  shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
- $('totalCards').textContent=cards.length;$('strongCount').textContent=cards.filter(c=>gap(c)>=100).length;
+ $('totalCards').textContent=cards.length;
  $('averageGap').innerHTML=(cards.length?(cards.reduce((s,c)=>s+gap(c),0)/cards.length).toFixed(0):'—')+'<span class="statunit">%</span>';
  $('count').textContent=shown.length+' / '+cards.length;
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
@@ -223,7 +219,7 @@ function render(){
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
 function exportData(){let blob=new Blob([JSON.stringify({app:'PSA Index',version:3,exportedAt:new Date().toISOString(),cards},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='psa-index-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Backup exported.');}
-$('add').onclick=openAdd;$('navAdd').onclick=openAdd;$('navExport').onclick=exportData;$('export').onclick=exportData;
+$('add').onclick=openAdd;$('navAdd').onclick=openAdd;
 $('choosePhoto').onclick=()=>$('photoFile').click();
 $('photoFile').onchange=async e=>{
  const file=e.target.files&&e.target.files[0];if(!file)return;
