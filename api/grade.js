@@ -1,15 +1,8 @@
-import { isAuthorized, sameOrigin } from '../lib/session.js';
-
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
-  }
-  if (!isAuthorized(req)) return res.status(401).json({ error: 'Please sign in before using AI grading.' });
-  if (!sameOrigin(req)) return res.status(403).json({ error: 'Request origin not allowed' });
-  if (Number(req.headers['content-length'] || 0) > 6000000) {
-    return res.status(413).json({ error: 'Photo upload is too large.' });
   }
   if (!process.env.OPENAI_API_KEY) {
     return res.status(503).json({ error: 'AI grading is not configured yet. Add OPENAI_API_KEY to the Vercel environment variables.' });
