@@ -72,6 +72,17 @@ dialog::backdrop{background:#080a0bcc;backdrop-filter:blur(5px)}
 @media(max-width:850px){.app{min-height:0;grid-template-columns:60px minmax(0,1fr);grid-template-rows:auto auto;align-content:start}.side{display:none}.sidehead,.sidefoot,.side-actions{display:none}.statbox{height:auto;min-height:0;align-self:start;margin:0;padding:8px 10px}.statlabel{font-size:8px}.statvalue{font-size:20px;margin-top:4px}.main{grid-column:2;grid-row:2;padding:14px 20px 40px}.rail{position:fixed;left:0;top:0;width:60px;height:100vh;grid-row:auto;z-index:5}.railstats{padding:0 5px;gap:6px}.railstat{padding:6px 2px}}
 @media(max-width:520px){.app{grid-template-columns:52px minmax(0,1fr)}.rail{width:52px}.railstats{padding:0 4px;gap:5px}.railstat span{font-size:6px}.railstat b{font-size:14px}.rail{padding-top:16px}.logo{width:33px;height:33px;margin-bottom:16px}.navbtn{width:36px;height:36px}.side{display:none}.statbox{padding:7px 6px;border-radius:9px}.statlabel{font-size:7px;letter-spacing:.025em}.statvalue{font-size:17px;margin-top:3px}.main{padding:12px 13px 35px}.topline{margin-bottom:28px}.headingrow{margin-bottom:20px}.heading-note{display:none}.add{padding:11px 12px}.controls{gap:6px}.search{padding:11px 10px;font-size:11px}.sort{max-width:115px;font-size:10px;padding:10px 6px}.legend{gap:9px;font-size:8px}.card{padding:13px}.metrics{gap:6px}.metric b{font-size:14px}.metric span{font-size:9px}.cardname{font-size:13px}}
 
+@media(max-width:899px){
+ .card.has-photo{display:grid;grid-template-columns:88px minmax(0,1fr);grid-template-areas:"photo top" "metrics metrics" "bottom bottom";column-gap:12px;row-gap:0;align-items:stretch}
+ .card.has-photo>.cardthumb{grid-area:photo;width:100%;height:112px;min-height:112px;max-height:112px;object-fit:contain;align-self:stretch;margin:0;border:1px solid var(--line);border-radius:8px;background:#111416;padding:5px}
+ .card.has-photo>.cardtop{grid-area:top;align-items:center;min-width:0;padding:2px 0}
+ .card.has-photo .cardidentity{min-width:0;align-items:center}
+ .card.has-photo .cardname{font-size:16px;line-height:1.15}
+ .card.has-photo .set{font-size:11px;margin-top:6px}
+ .card.has-photo .signal{font-size:9px;padding:6px 7px}
+ .card.has-photo>.metrics{grid-area:metrics;margin-top:12px}
+ .card.has-photo>.cardbottom{grid-area:bottom;margin-top:10px}
+}
 @media(min-width:900px){
  .card{display:grid;grid-template-columns:210px minmax(0,1fr);grid-template-rows:auto auto auto;column-gap:0;padding:0;min-height:250px;overflow:hidden;align-items:stretch}
  .card.has-photo{grid-template-areas:"photo top" "photo metrics" "photo bottom"}
