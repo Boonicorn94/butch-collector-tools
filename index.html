@@ -452,7 +452,7 @@ function render(){
  $('gradingPanel').classList.toggle('hidden',!isGrading);
  $('list').classList.toggle('hidden',isGrading);
  $('count').parentElement.classList.toggle('hidden',isGrading);
- $('trackedTab').classList.toggle('active',!isTopTen);
+ $('trackedTab').classList.toggle('active',!isTopTen&&!isGrading);
  $('topTenTab').classList.toggle('active',isTopTen);
  $('gradingTab').classList.toggle('active',isGrading);
  $('trackedTab').setAttribute('aria-selected',String(!isTopTen));
