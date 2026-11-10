@@ -138,6 +138,12 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 .railstat small{font-size:10px;color:var(--muted)}
 .railstat.featured{border-color:#52613b;background:#252d20}
 .railstat.featured b{color:var(--accent)}
+
+.railbottom{display:flex;flex-direction:column;align-items:center;gap:12px}
+.navbtn.thumb-add{width:48px;height:48px;border-radius:15px;background:var(--accent);color:#17191b;box-shadow:0 5px 18px #0004}
+.navbtn.thumb-add:hover{background:#d7ff82;color:#17191b;transform:translateY(-1px)}
+.navbtn.thumb-add svg{width:23px;height:23px;stroke-width:2.3}
+@media(max-width:850px){.rail{padding-bottom:calc(18px + env(safe-area-inset-bottom))}.navbtn.thumb-add{width:46px;height:46px}}
 </style>
 </head>
 <body>
@@ -150,9 +156,9 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
  <div class="railstat"><span>STRONG</span><b id="strongCount">0</b></div>
 </div>
  <button class="navbtn active" title="Watchlist" aria-label="Watchlist"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></button>
- <button class="navbtn" id="navAdd" title="Add card" aria-label="Add card"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+ 
  <button class="navbtn" id="navExport" title="Export backup" aria-label="Export backup"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5"/><path d="M5 17v3h14v-3"/></svg></button>
- <div class="railbottom"><button class="navbtn" id="navInfo" title="About signals" aria-label="About signals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></button></div>
+ <div class="railbottom"><button class="navbtn thumb-add" id="navAdd" title="Add card" aria-label="Add card"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="navbtn" id="navInfo" title="About signals" aria-label="About signals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></button></div>
 </aside>
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme">LIGHT MODE ◐</button></div>
