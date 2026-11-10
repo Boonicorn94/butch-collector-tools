@@ -1005,6 +1005,36 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .cards:not(.thumbnail-mode) .card.has-photo{grid-template-columns:68px minmax(0,1fr)!important;column-gap:8px!important}
 }
 
+
+/* Final phone List-mode photo sizing: use a wider photo column and let the valuation stack define height */
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  grid-template-columns:104px minmax(0,1fr)!important;
+  grid-template-rows:auto auto auto!important;
+  align-items:stretch!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb{
+  width:100%!important;
+  height:auto!important;
+  min-height:100%!important;
+  max-height:none!important;
+  align-self:stretch!important;
+  object-fit:contain!important;
+  display:block!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.card-valuation{
+  min-height:0!important;
+ }
+}
+@media(max-width:520px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  grid-template-columns:92px minmax(0,1fr)!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb{
+  padding:2px!important;
+ }
+}
+
 </style>
 </head>
 <body>
