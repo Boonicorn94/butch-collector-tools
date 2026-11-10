@@ -341,9 +341,7 @@ async function saveCard(){
 }
 $('saveCard').addEventListener('click',saveCard);
 $('form').addEventListener('submit',e=>{e.preventDefault();saveCard();});
-$('importBtn').onclick=()=>$('importFile').click();
 $('importFile').onchange=async e=>{let f=e.target.files?.[0];if(!f)return;try{let j=JSON.parse(await f.text()),arr=Array.isArray(j)?j:j.cards;if(!Array.isArray(arr)||!arr.every(valid))throw 0;if(confirm('Import '+arr.length+' cards? This replaces the PUBLIC shared watchlist for everyone.')){const old=cards;cards=arr.map((c,i)=>({...c,id:String(c.id||'import-'+Date.now()+'-'+i)}));if(await save())notify('Backup imported for everyone.');else cards=old;}}catch(_){alert('This backup file could not be read.');}finally{e.target.value='';}};
-$('clearAll').onclick=()=>{if(cards.length&&confirm('Delete EVERY card from the PUBLIC shared watchlist for everyone? This cannot be undone except from a backup.')){const old=cards;cards=[];save().then(ok=>{if(ok)notify('Public watchlist cleared.');else cards=old;});}};
 
 const themeToggle=$('themeToggle');
 function applyTheme(theme){
