@@ -456,19 +456,6 @@ html[data-theme="light"] .detail-gap small{color:#777386}
 .auth-message{min-height:20px;margin-top:12px!important;color:#d7c5ff!important;font-size:11px!important}
 .lock-app{border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted);padding:7px 10px;font:9px 'DM Mono',monospace;letter-spacing:.06em}
 
-.hot-ticker{display:flex;align-items:center;gap:13px;min-width:0;height:34px;margin:0 0 15px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
-.ticker-heading{display:flex;align-items:center;gap:6px;flex:none;font:9px 'DM Mono',monospace;letter-spacing:.09em;color:var(--accent);white-space:nowrap}
-.ticker-heading small{color:var(--muted);font-size:8px}
-.ticker-pulse{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}
-.ticker-window{flex:1;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%)}
-.ticker-track{display:flex;align-items:center;width:max-content;white-space:nowrap;animation:ticker-scroll 12s linear infinite}
-.ticker-track:hover{animation-play-state:paused}
-.ticker-item{display:inline-flex;align-items:center;gap:7px;padding:0 22px;color:var(--soft);font:9px 'DM Mono',monospace}
-.ticker-item b{color:var(--ink);font-weight:500}
-.ticker-item strong{color:var(--green);font-weight:500}
-.ticker-item i{width:3px;height:3px;border-radius:50%;background:var(--muted);opacity:.7}
-.ticker-empty{font:9px 'DM Mono',monospace;color:var(--muted)}
-@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
 @media(max-width:520px){.hot-ticker{height:31px;gap:9px;padding:0 8px;margin-bottom:12px}.ticker-heading{font-size:8px}.ticker-item{font-size:8px;padding:0 14px}}
 </style>
@@ -483,11 +470,7 @@ html[data-theme="light"] .detail-gap small{color:#777386}
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="exitApp">EXIT</button></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><div class="brand-title"><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p class="brand-tagline">Find the gems. See the potential. Make the move.</p></div></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
- <div class="hot-ticker" id="hotTicker" aria-label="Top five cards with the highest PSA 10 to raw price gap">
-  <div class="ticker-heading"><span class="ticker-pulse"></span><span>HOT TO BUY</span><small>TOP 5</small></div>
-  <div class="ticker-window"><div class="ticker-track" id="tickerTrack"><span class="ticker-empty">Add cards to see the strongest opportunities</span></div></div>
- </div>
- <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
+  <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
 
  <div class="countrow"><span id="listHeading">Tracked cards</span><div class="count-actions"><button type="button" class="view-toggle" id="viewToggle" aria-pressed="false" title="Switch to thumbnail view">▦ Thumbnail</button><span id="count">0 / 0</span></div></div>
  <div class="cards" id="list"></div>
@@ -540,10 +523,6 @@ function render(){
  $('topTenTab').setAttribute('aria-selected',String(isTopTen));
  $('gradingTab').setAttribute('aria-selected',String(isGrading));
  $('listHeading').textContent=isTopTen?'Top 10 cards to purchase':'Tracked cards';
- const hot=cards.slice().sort((a,b)=>gap(b)-gap(a)).slice(0,5);
- const tickerItems=hot.map((c,i)=>`<span class="ticker-item"><b>${i+1}. ${esc(c.name)}</b><i></i><span>RAW ${money(c.raw)}</span><span>PSA 10 ${money(c.psa10)}</span><strong>+${gap(c).toFixed(0)}% GAP</strong></span>`).join('');
- $('tickerTrack').innerHTML=hot.length?tickerItems+tickerItems:'<span class="ticker-empty">Add cards to see the strongest opportunities</span>';
- $('hotTicker').classList.toggle('hidden',isGrading);
  if(isGrading)return;
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
  const createdAt=c=>Number(c.createdAt)||Number(String(c.id||'').match(/^c-(\d+)-/)?.[1])||0;
