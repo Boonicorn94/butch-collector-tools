@@ -107,7 +107,7 @@ dialog::backdrop{background:#080a0bcc;backdrop-filter:blur(5px)}
 
 
 /* Theme switch */
-.theme-toggle{min-width:104px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);display:grid;place-items:center;font:600 10px 'DM Mono',monospace;letter-spacing:.08em;line-height:1;cursor:pointer;white-space:nowrap}
+.theme-toggle{width:44px;height:38px;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;overflow:hidden}
 .dot{background:#a78bfa;box-shadow:0 0 10px #a78bfa80}
 h1 span[style]{color:#a78bfa!important}
 #totalCards,#strongCount{color:#a78bfa}
@@ -158,9 +158,10 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 .navbtn.thumb-add svg{width:23px;height:23px;stroke-width:2.3}
 @media(max-width:850px){.rail{padding-bottom:calc(18px + env(safe-area-inset-bottom))}.navbtn.thumb-add{width:46px;height:46px}}
 
-.theme-toggle{position:fixed;right:0;bottom:calc(94px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 5px 18px #0005;transition:transform .16s,background .16s,color .16s}
-.theme-toggle:active{transform:scale(.96)}
-@media(max-width:520px){.theme-toggle{right:-3px;bottom:calc(94px + env(safe-area-inset-bottom));min-width:100px;height:34px;font-size:9px}}
+.theme-toggle{position:fixed;right:30px;bottom:calc(94px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 5px 18px #0005;transition:transform .16s,background .16s,color .16s}
+.theme-toggle:active{transform:scale(.94)}
+.theme-toggle svg{width:20px;height:20px;display:block}
+@media(max-width:520px){.theme-toggle{right:25px;bottom:calc(94px + env(safe-area-inset-bottom));width:42px;height:36px}}
 /* Floating add-card action */
 .floating-add{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:20;width:60px;height:60px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#17191b;box-shadow:0 8px 26px #0007;font:700 30px 'Space Grotesk',sans-serif;cursor:pointer}
 .floating-add svg{width:27px;height:27px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
@@ -199,7 +200,7 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 <div class="field"><label for="psa10">PSA 10 reference (£)</label><input id="psa10" type="number" min="0" max="100000000" step="0.01" required inputmode="decimal" placeholder="1100"></div>
 <div class="field"><label>Card image (optional)</label><button type="button" class="cancel" id="choosePhoto" style="padding:11px;border-radius:9px">＋ Choose image</button><input id="photoFile" type="file" accept="image/*" hidden><input id="imageUrl" type="hidden"><div id="photoStatus" style="font-size:10px;color:#a8e6a1;min-height:14px"></div></div>
 <div class="formbuttons"><button type="button" class="cancel" id="cancel">Cancel</button><button class="save" type="button" id="saveCard">Save card</button></div></form></dialog>
-<button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch colour theme">LIGHT MODE</button>
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch colour theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
 <button class="floating-add" id="navAdd" type="button" title="Add card" aria-label="Add card"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <input class="hidden" type="file" id="importFile" accept=".json,application/json"><div class="toast" id="toast" role="status"></div>
 <script>
@@ -280,7 +281,7 @@ $('clearAll').onclick=()=>{if(cards.length&&confirm('Delete EVERY card from the 
 const themeToggle=$('themeToggle');
 function applyTheme(theme){
  document.documentElement.dataset.theme=theme;
- themeToggle.textContent=theme==='dark'?'LIGHT MODE':'DARK MODE';
+ themeToggle.innerHTML=theme==='dark'?'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
  themeToggle.setAttribute('aria-label',theme==='dark'?'Switch to light mode':'Switch to dark mode');
  try{localStorage.setItem('butchCollectorTheme',theme);}catch(_){}
 }
