@@ -550,6 +550,55 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .actions button{padding:4px 7px;font-size:8px}
 }
 
+
+/* Price references: compact inline chips beneath the card title */
+.metrics.compact-prices{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ justify-content:flex-start;
+ gap:6px;
+ width:max-content;
+ max-width:100%;
+ margin:8px 0 0;
+ padding:0;
+}
+.metrics.compact-prices .metric{
+ display:inline-flex;
+ align-items:center;
+ justify-content:flex-start;
+ gap:8px;
+ width:auto;
+ min-width:0;
+ padding:5px 9px;
+ border:1px solid var(--line);
+ border-radius:6px;
+ background:var(--surface2);
+}
+.metrics.compact-prices .metric span{
+ font-size:8px;
+ letter-spacing:.08em;
+ color:var(--muted);
+}
+.metrics.compact-prices .metric b{
+ margin:0;
+ font-size:12px;
+ font-weight:600;
+ text-align:left;
+ white-space:nowrap;
+}
+@media(min-width:900px){
+ .metrics.compact-prices{margin:7px 0 0;padding:0;gap:6px}
+ .metrics.compact-prices .metric{padding:5px 8px}
+ .metrics.compact-prices .metric b{font-size:12px}
+}
+@media(max-width:899px){
+ .card.has-photo>.metrics.compact-prices{margin-top:6px}
+ .metrics.compact-prices .metric{padding:4px 7px}
+ .metrics.compact-prices .metric span{font-size:7px}
+ .metrics.compact-prices .metric b{font-size:11px}
+}
+
 </style>
 </head>
 <body>
