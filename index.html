@@ -432,6 +432,18 @@ html[data-theme="light"] .detail-gap b{color:#237a52}
 html[data-theme="light"] .detail-gap small{color:#777386}
 
 
+/* Cinematic entry screen */
+.entry-splash{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:#17191b;color:#f1f3ef;cursor:pointer;opacity:1;transition:opacity .8s ease,visibility .8s ease}
+.entry-splash.leaving{opacity:0;visibility:hidden;pointer-events:none}
+.entry-lockup{display:flex;flex-direction:column;align-items:center;text-align:center;gap:15px;padding:24px;animation:entryReveal 1.35s cubic-bezier(.2,.75,.25,1) both}
+.entry-logo{width:76px;height:76px;border-radius:22px;background:#c9f36b;color:#17191b;display:grid;place-items:center;font:700 34px 'Space Grotesk',sans-serif;letter-spacing:-.09em;box-shadow:0 12px 55px #c9f36b22}
+.entry-title{font:700 clamp(38px,7vw,58px)/.98 'Space Grotesk',sans-serif;letter-spacing:-.07em}
+.entry-title span{color:#c9f36b}
+.entry-tagline{margin:0;color:#929b98;font:12px 'Space Grotesk',sans-serif;letter-spacing:.02em}
+.entry-prompt{position:absolute;bottom:clamp(34px,8vh,70px);font:9px 'DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#78817e;animation:promptPulse 2.2s ease-in-out infinite}
+@keyframes entryReveal{from{opacity:0;transform:translateY(16px) scale(.97);filter:blur(8px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes promptPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.entry-lockup,.entry-prompt{animation:none}.entry-splash{transition:none}}
 /* Shared app access gate */
 .auth-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 20%,#30263f 0%,#17191b 58%);color:#f1f3ef}
 .auth-card{width:min(100%,410px);padding:30px;border:1px solid #51416f;border-radius:18px;background:rgba(30,33,36,.96);box-shadow:0 24px 80px #0008}
@@ -446,7 +458,12 @@ html[data-theme="light"] .detail-gap small{color:#777386}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="entry-splash" id="entrySplash" role="button" tabindex="0" aria-label="Enter PSA Index">
+ <div class="entry-lockup"><div class="entry-logo">B.</div><div class="entry-title">PSA Index<span>.</span></div><p class="entry-tagline">Find the gems. See the potential. Make the move.</p></div>
+ <div class="entry-prompt">Tap anywhere to enter</div>
+</div>
+<div class="auth-gate hidden" id="authGate"><form class="auth-card" id="authForm"><div class="auth-brand">BUTCH COLLECTOR TOOLS / PRIVATE ACCESS</div><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p>This is a shared private workspace. Enter the access password to view and manage the collection.</p><label for="accessPassword">Access password</label><input id="accessPassword" type="password" autocomplete="current-password" required minlength="12" placeholder="Enter shared password"><button type="submit" id="authSubmit">Unlock app</button><p class="auth-message" id="authMessage" role="status"></p></form></div>
+<div class="app hidden" id="appRoot">
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="lockApp">LOCK APP</button></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><div class="brand-title"><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p class="brand-tagline">Find the gems. See the potential. Make the move.</p></div></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
@@ -632,15 +649,28 @@ try{savedTheme=localStorage.getItem('butchCollectorTheme')||'dark';}catch(_){}
 applyTheme(savedTheme==='light'?'light':'dark');
 themeToggle.onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 
-async function unlockApp(){
- const gate=$('authGate'),root=$('appRoot'),message=$('authMessage');
+let entryReady=false,hasSession=false;
+async function checkSession(){
+ const message=$('authMessage');
  try{
   const check=await fetch('/api/auth',{cache:'no-store'});
   const state=await check.json();
-  if(!state.configured){message.textContent='Owner setup required: add the two access settings in Vercel.';return;}
-  if(state.ok){gate.classList.add('hidden');root.classList.remove('hidden');render();load();}
+  hasSession=Boolean(state.configured&&state.ok);
+  if(!state.configured)message.textContent='Owner setup required: add the two access settings in Vercel.';
  }catch(_){message.textContent='Could not check access. Refresh and try again.';}
 }
+function revealEntry(){
+ if(entryReady)return;
+ entryReady=true;
+ $('entrySplash').classList.add('leaving');
+ setTimeout(()=>{
+  $('entrySplash').classList.add('hidden');
+  if(hasSession){$('appRoot').classList.remove('hidden');render();load();}
+  else $('authGate').classList.remove('hidden');
+ },650);
+}
+$('entrySplash').addEventListener('click',revealEntry);
+$('entrySplash').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();revealEntry();}});
 $('authForm').addEventListener('submit',async e=>{
  e.preventDefault();
  const button=$('authSubmit'),message=$('authMessage');
@@ -649,15 +679,15 @@ $('authForm').addEventListener('submit',async e=>{
   const response=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$('accessPassword').value})});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||'Could not sign in.');
-  $('authGate').classList.add('hidden');$('appRoot').classList.remove('hidden');$('accessPassword').value='';render();load();
+  hasSession=true;$('authGate').classList.add('hidden');$('appRoot').classList.remove('hidden');$('accessPassword').value='';render();load();
  }catch(err){message.textContent=err.message||'Could not sign in.';}
  finally{button.disabled=false;button.textContent='Unlock app';}
 });
 $('lockApp').onclick=async()=>{
  try{await fetch('/api/auth',{method:'DELETE'});}catch(_){}
- $('appRoot').classList.add('hidden');$('authGate').classList.remove('hidden');$('authMessage').textContent='App locked.';$('accessPassword').value='';
+ hasSession=false;$('appRoot').classList.add('hidden');$('authGate').classList.remove('hidden');$('authMessage').textContent='App locked.';$('accessPassword').value='';
 };
-unlockApp();
+checkSession();
 })();
 </script>
 
