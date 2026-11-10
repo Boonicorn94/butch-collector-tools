@@ -431,12 +431,24 @@ html[data-theme="light"] .detail-gap strong{color:#6545b8}
 html[data-theme="light"] .detail-gap b{color:#237a52}
 html[data-theme="light"] .detail-gap small{color:#777386}
 
+
+/* Shared app access gate */
+.auth-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 20%,#30263f 0%,#17191b 58%);color:#f1f3ef}
+.auth-card{width:min(100%,410px);padding:30px;border:1px solid #51416f;border-radius:18px;background:rgba(30,33,36,.96);box-shadow:0 24px 80px #0008}
+.auth-brand{font:10px 'DM Mono',monospace;letter-spacing:.16em;color:#bca5ef;text-transform:uppercase}
+.auth-card h1{font-size:32px;margin:16px 0 8px}
+.auth-card p{color:#a8b0ac;font-size:13px;line-height:1.6;margin:0 0 20px}
+.auth-card label{display:block;font:10px 'DM Mono',monospace;letter-spacing:.1em;color:#a8b0ac;margin:0 0 8px;text-transform:uppercase}
+.auth-card input{width:100%;padding:13px 14px;border:1px solid #42464a;border-radius:9px;background:#17191b;color:#f1f3ef;outline:none}
+.auth-card button{width:100%;margin-top:12px;padding:13px;border:0;border-radius:9px;background:#c9f36b;color:#17191b;font-weight:700}
+.auth-message{min-height:20px;margin-top:12px!important;color:#d7c5ff!important;font-size:11px!important}
+.lock-app{border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted);padding:7px 10px;font:9px 'DM Mono',monospace;letter-spacing:.06em}
 </style>
 </head>
 <body>
 <div class="app">
 <main class="main">
- <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span></div>
+ <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="lockApp">LOCK APP</button></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><div class="brand-title"><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p class="brand-tagline">Find the gems. See the potential. Make the move.</p></div></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
  <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
@@ -620,7 +632,32 @@ try{savedTheme=localStorage.getItem('butchCollectorTheme')||'dark';}catch(_){}
 applyTheme(savedTheme==='light'?'light':'dark');
 themeToggle.onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 
-render();load();
+async function unlockApp(){
+ const gate=$('authGate'),root=$('appRoot'),message=$('authMessage');
+ try{
+  const check=await fetch('/api/auth',{cache:'no-store'});
+  const state=await check.json();
+  if(!state.configured){message.textContent='Owner setup required: add the two access settings in Vercel.';return;}
+  if(state.ok){gate.classList.add('hidden');root.classList.remove('hidden');render();load();}
+ }catch(_){message.textContent='Could not check access. Refresh and try again.';}
+}
+$('authForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const button=$('authSubmit'),message=$('authMessage');
+ button.disabled=true;button.textContent='Checking…';message.textContent='';
+ try{
+  const response=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$('accessPassword').value})});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||'Could not sign in.');
+  $('authGate').classList.add('hidden');$('appRoot').classList.remove('hidden');$('accessPassword').value='';render();load();
+ }catch(err){message.textContent=err.message||'Could not sign in.';}
+ finally{button.disabled=false;button.textContent='Unlock app';}
+});
+$('lockApp').onclick=async()=>{
+ try{await fetch('/api/auth',{method:'DELETE'});}catch(_){}
+ $('appRoot').classList.add('hidden');$('authGate').classList.remove('hidden');$('authMessage').textContent='App locked.';$('accessPassword').value='';
+};
+unlockApp();
 })();
 </script>
 
