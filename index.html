@@ -21,6 +21,7 @@ button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation
 .main{grid-column:1;padding:36px clamp(20px,4vw,54px) 50px;min-width:0}
 .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}
 .eyebrow{font:12px 'DM Mono',monospace;letter-spacing:.17em;color:var(--muted);text-transform:uppercase}
+.topline-copy{display:flex;flex-direction:column;gap:7px}.brand-tagline{margin:0;color:var(--muted);font-size:12px;line-height:1.4;letter-spacing:.005em}
 .live{display:flex;align-items:center;gap:7px;font:10px 'DM Mono',monospace;color:#a8b1ac;letter-spacing:.1em}.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px #c9f36b80}
 h1{font-size:clamp(36px,5vw,58px);line-height:.98;letter-spacing:-.065em;margin:0;font-weight:700}
 .headingrow{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:27px}
@@ -406,7 +407,7 @@ html[data-theme="light"] .detail-gap small{color:#777386}
 <body>
 <div class="app">
 <main class="main">
- <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span></div>
+ <div class="topline"><div class="topline-copy"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><p class="brand-tagline">We help collectors find cards worth buying and grading.</p></div></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><h1>PSA Index<span style="color:var(--accent)">.</span></h1></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
  <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
