@@ -758,6 +758,16 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .card-valuation .metrics.compact-prices .metric b{font-size:12px}
 }
 
+
+/* Profit emphasis and card-anchored detail dialog */
+.valuation-bottom .gap-cash{color:var(--accent)!important}
+.valuation-bottom .gap{font-size:14px!important;font-weight:800!important;letter-spacing:.04em}
+.detail-modal{position:fixed!important;margin:0!important;left:var(--detail-left,50%)!important;top:var(--detail-top,50%)!important;transform:none!important}
+@media(max-width:520px){
+ .valuation-bottom .gap{font-size:11px!important}
+ .detail-modal{left:14px!important;width:calc(100% - 28px)!important}
+}
+
 </style>
 </head>
 <body>
@@ -880,9 +890,9 @@ $('viewToggle').onclick=()=>{
 };
 $('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').onclick=()=>{activeTab='top10';render();};$('gradingTab').onclick=()=>{activeTab='grading';render();};
 let selectedDetailId=null;
-function showCardDetail(id){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;$('detailModal').style.setProperty('--detail-photo',c.imageUrl?'url('+JSON.stringify(c.imageUrl)+')':'none');const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';$('detailModal').showModal();}
+function showCardDetail(id,cardElement){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const modal=$('detailModal');modal.style.setProperty('--detail-photo',c.imageUrl?'url('+JSON.stringify(c.imageUrl)+')':'none');const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';const rect=cardElement?.getBoundingClientRect();if(rect){const top=Math.max(14,Math.min(rect.top,window.innerHeight-380));const left=Math.max(14,Math.min(rect.left+(rect.width-modal.offsetWidth)/2,window.innerWidth-modal.offsetWidth-14));modal.style.setProperty('--detail-top',top+'px');modal.style.setProperty('--detail-left',left+'px');}modal.showModal();}
 $('detailClose').onclick=()=>$('detailModal').close();$('detailDone').onclick=()=>$('detailModal').close();$('detailEdit').onclick=()=>{const id=selectedDetailId;$('detailModal').close();if(id)edit(id);};
-$('list').onclick=e=>{let a=e.target.closest('[data-edit]'),d=e.target.closest('[data-delete]');if(a){e.stopPropagation();edit(a.dataset.edit);return;}if(d){e.stopPropagation();let c=cards.find(x=>x.id===d.dataset.delete);if(c&&confirm('Delete '+c.name+' from the public shared watchlist?')){const old=cards;cards=cards.filter(x=>x.id!==c.id);save().then(ok=>{if(ok)notify('Card deleted for everyone.');else cards=old;});}return;}const card=e.target.closest('.card');if(card){const first=card.querySelector('[data-edit]');if(first)showCardDetail(first.dataset.edit);}};
+$('list').onclick=e=>{let a=e.target.closest('[data-edit]'),d=e.target.closest('[data-delete]');if(a){e.stopPropagation();edit(a.dataset.edit);return;}if(d){e.stopPropagation();let c=cards.find(x=>x.id===d.dataset.delete);if(c&&confirm('Delete '+c.name+' from the public shared watchlist?')){const old=cards;cards=cards.filter(x=>x.id!==c.id);save().then(ok=>{if(ok)notify('Card deleted for everyone.');else cards=old;});}return;}const card=e.target.closest('.card');if(card){const first=card.querySelector('[data-edit]');if(first)showCardDetail(first.dataset.edit,card);}};
 async function saveCard(){
  let name=$('name').value.trim(),rawText=$('raw').value.trim(),psaText=$('psa10').value.trim();
  let raw=Number(rawText),psa10=Number(psaText);
