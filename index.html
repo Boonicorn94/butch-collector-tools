@@ -1103,6 +1103,31 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .cards.thumbnail-mode .card-valuation{gap:6px!important}
 }
 
+
+/* Thumbnail mode only: constrain the card image to the RAW-to-profit valuation height */
+.cards.thumbnail-mode .card.has-photo{
+ grid-template-rows:auto minmax(0,auto) auto!important;
+}
+.cards.thumbnail-mode .card.has-photo>.cardthumb{
+ grid-column:1!important;
+ grid-row:2!important;
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ max-height:100%!important;
+ align-self:stretch!important;
+ justify-self:stretch!important;
+ object-fit:contain!important;
+ overflow:hidden!important;
+}
+.cards.thumbnail-mode .card.has-photo>.cardtop>.card-valuation{
+ grid-column:2!important;
+ grid-row:2!important;
+ align-self:stretch!important;
+ min-height:0!important;
+}
+
 </style>
 </head>
 <body>
