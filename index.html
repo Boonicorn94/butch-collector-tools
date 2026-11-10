@@ -180,7 +180,7 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span></div>
  <div class="headingrow"><div><h1>PSA Index<span style="color:var(--accent)">.</span></h1></div><button class="add" id="add">＋ Add card</button></div>
- <div class="controls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap first</option></select></div>
+ <div class="controls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
  <div class="legend"><span><i style="background:var(--green)"></i>STRONG 100%+</span><span><i style="background:var(--accent)"></i>GOOD 50%+</span><span><i style="background:var(--amber)"></i>WATCH 20%+</span><span><i style="background:var(--red)"></i>LOW</span></div>
  <div class="countrow"><span>Tracked cards</span><span id="count">0 / 0</span></div>
  <div class="cards" id="list"></div>
@@ -214,7 +214,7 @@ async function load(){try{const r=await fetch('/api/cards',{cache:'no-store'});i
 async function save(){try{const r=await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cards})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Save failed');try{localStorage.setItem(KEY,JSON.stringify(cards));}catch(_){}render();return true;}catch(e){alert(e.message||'Could not save to the shared watchlist. Please try again.');render();return false;}}
 function render(){
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
- shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
+ const createdAt=c=>Number(c.createdAt)||Number(String(c.id||'').match(/^c-(\\d+)-/)?.[1])||0;\n if(mode==='newest')shown.sort((a,b)=>createdAt(b)-createdAt(a));\n else if(mode==='oldest')shown.sort((a,b)=>createdAt(a)-createdAt(b));\n else shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
  $('totalCards').textContent=cards.length;
  $('averageGap').innerHTML=(cards.length?(cards.reduce((s,c)=>s+gap(c),0)/cards.length).toFixed(0):'—')+'<span class="statunit">%</span>';
  $('count').textContent=shown.length+' / '+cards.length;
@@ -261,7 +261,7 @@ async function saveCard(){
  let id=$('editId').value||'c-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
  let imageUrl=$('imageUrl').value.trim();
  if(imageUrl&&!/^https?:\/\//i.test(imageUrl)&&!/^data:image\/(jpeg|png|webp|gif);base64,/i.test(imageUrl)){notify('Choose a photo or enter a direct image URL.');$('imageUrl').focus();return;}
- let c={id,name,set:$('set').value.trim(),raw,psa10,imageUrl};
+ let existing=cards.find(x=>x.id===id);\n let c={id,createdAt:existing?.createdAt||Date.now(),name,set:$('set').value.trim(),raw,psa10,imageUrl};
  let i=cards.findIndex(x=>x.id===id);
  if(i<0)cards.push(c);else cards[i]=c;
  if(await save()){$('modal').close();notify(i<0?'Card added for everyone.':'Card updated for everyone.');}
