@@ -196,6 +196,51 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
  .railstat span{font-size:7px}
  .railstat b{font-size:16px}
 }
+
+/* Denser card layout */
+.cards{gap:6px}
+.card{border-radius:11px}
+@media(max-width:899px){
+ .card{padding:10px 11px}
+ .card.has-photo{grid-template-columns:72px minmax(0,1fr);column-gap:9px}
+ .card.has-photo>.cardthumb{height:88px;min-height:88px;max-height:88px;padding:3px;border-radius:6px}
+ .card.has-photo .cardname{font-size:14px;line-height:1.12}
+ .card.has-photo .set{font-size:10px;margin-top:4px}
+ .card.has-photo .signal{font-size:8px;padding:5px 6px}
+ .card.has-photo>.metrics{margin-top:8px}
+ .card.has-photo>.cardbottom{margin-top:7px}
+ .metrics{gap:5px;margin-top:9px}
+ .metric{padding-top:7px}
+ .metric span{font-size:8px}
+ .metric b{font-size:13px;margin-top:4px}
+ .gap{font-size:12px}
+ .actions{gap:4px}
+ .actions button{padding:5px 8px;font-size:9px}
+}
+@media(min-width:900px){
+ .card{grid-template-columns:150px minmax(0,1fr);min-height:178px;border-radius:11px}
+ .cardthumb{min-height:178px;padding:8px}
+ .cardtop{padding:14px 18px 6px;gap:12px}
+ .cardname{font-size:23px;line-height:1.1}
+ .set{font-size:13px;line-height:1.2;margin-top:5px}
+ .signal{font-size:10px;padding:7px 9px}
+ .metrics{gap:12px;margin:0;padding:6px 18px 8px}
+ .metric{padding-top:7px}
+ .metric span{font-size:10px}
+ .metric b{font-size:20px;margin-top:4px}
+ .gap{font-size:15px}
+ .cardbottom{padding:6px 18px 12px}
+ .actions button{font-size:10px;padding:6px 9px}
+}
+@media(max-width:520px){
+ .card{padding:9px}
+ .card.has-photo{grid-template-columns:66px minmax(0,1fr);column-gap:8px}
+ .card.has-photo>.cardthumb{height:82px;min-height:82px;max-height:82px}
+ .card.has-photo .cardname{font-size:13px}
+ .metric b{font-size:12px}
+ .metric span{font-size:7px;letter-spacing:.04em}
+}
+
 </style>
 </head>
 <body>
