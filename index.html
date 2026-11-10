@@ -246,6 +246,72 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 html[data-theme="light"] .floating-add{background:#252628;color:#fffefa}
 html[data-theme="light"] .floating-add svg{stroke:#fffefa}
 
+
+/* 2026 collector-terminal visual refresh */
+:root{--bg:#101114;--surface:#17191e;--surface2:#1d2027;--line:#292d36;--ink:#f4f4f7;--muted:#9297a4;--soft:#c8cad2;--accent:#a78bfa;--green:#65d6a0;--amber:#f2bd68;--red:#f07f91}
+html,body{background:var(--bg)}
+body{letter-spacing:-.012em}
+.main{max-width:1180px;margin:0 auto;padding-top:clamp(25px,4vw,52px)}
+.topline{margin-bottom:clamp(25px,4vw,43px)}
+.eyebrow{font-size:10px;letter-spacing:.19em;color:#858a99}
+.headingrow{margin-bottom:30px;align-items:flex-end}
+.brand-heading{gap:13px}
+.brand-heading .logo{background:#a78bfa;color:#111116;border-radius:11px;box-shadow:0 0 26px #a78bfa22}
+h1{font-size:clamp(38px,5vw,60px);letter-spacing:-.075em}
+.railstats{gap:9px}
+.railstat{min-width:91px;padding:10px 13px;border-radius:11px;background:#17191e;border-color:#292d36}
+.railstat span{font-size:8px;letter-spacing:.13em;color:#969baa}
+.railstat b{font-size:21px;color:#c4b5fd}
+.railstat.featured{background:linear-gradient(145deg,#28213a,#1b1b25);border-color:#51416f}
+.railstat.featured b{color:#c4b5fd}
+.controls{gap:10px;margin-bottom:13px}
+.search,.sort{border-radius:11px;background:#17191e;border-color:#2b2f39;min-height:44px}
+.search{padding:13px 15px;font-size:12px}
+.sort{padding:11px 13px}
+.countrow{font-size:9px;letter-spacing:.15em;padding:7px 3px 12px;color:#858a99}
+.cards{gap:9px}
+.card{background:linear-gradient(125deg,#191b21,#15171c);border:1px solid #292d36;border-radius:14px;box-shadow:0 5px 18px #00000012;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-2px);border-color:#57477a;box-shadow:0 12px 28px #0003}
+.card.has-photo>.cardthumb,.cardthumb{background:#101116;border-color:#292d36}
+.cardname{letter-spacing:-.035em}
+.signal{border-radius:20px;font-size:9px;letter-spacing:.11em}
+.signal.green{background:#163528;color:#75e0ad}.signal.lime{background:#302747;color:#c4b5fd}.signal.amber{background:#382d1e;color:#f2c477}.signal.red{background:#39232b;color:#f28c9e}
+.metric{border-top-color:#2b2e38}
+.metric span{font-size:9px;letter-spacing:.12em;color:#858a99}
+.metric b{letter-spacing:-.04em}
+.metric.profit-gap b,.gap.green{color:#70dca8}
+.gap.lime{color:#c4b5fd}.gap.amber{color:#f2c477}.gap.red{color:#f28c9e}
+.actions button{border-radius:8px;border-color:#343846;color:#b8bbc6;transition:.18s}
+.actions button:hover{border-color:#a78bfa;color:#e6ddff;background:#a78bfa12}
+.floating-add{background:#a78bfa;color:#111116;box-shadow:0 8px 28px #a78bfa38;width:56px;height:56px}
+.floating-add:hover{background:#b9a5ff;transform:translateY(-2px)}
+.theme-toggle{border-radius:12px;background:#191b21;border-color:#343846;color:#e5e0f4}
+dialog{background:#191b21;border-color:#343846;border-radius:18px}
+.field input{border-radius:10px}
+.save,.toast{background:#a78bfa;color:#111116}
+html[data-theme="light"]{--bg:#f3f2f7;--surface:#fff;--surface2:#eeedf4;--line:#e0deea;--ink:#20202a;--muted:#777786;--soft:#484856;--accent:#7554c8;--green:#237a52;--amber:#996117;--red:#b43f58}
+html[data-theme="light"] body{background:radial-gradient(ellipse at 15% 0%,#e9e3f8 0,transparent 38%),#f3f2f7}
+html[data-theme="light"] .brand-heading .logo{background:#7554c8;color:white;box-shadow:0 4px 15px #7554c82a}
+html[data-theme="light"] .railstat{background:#fff;border-color:#e0deea}
+html[data-theme="light"] .railstat b{color:#7554c8}
+html[data-theme="light"] .railstat.featured{background:#eee9fa;border-color:#d8ccef}
+html[data-theme="light"] .railstat.featured b{color:#6545b8}
+html[data-theme="light"] .search,html[data-theme="light"] .sort{background:#fff;border-color:#e0deea}
+html[data-theme="light"] .card{background:linear-gradient(125deg,#fff,#fbfaff);border-color:#e0deea;box-shadow:0 5px 18px #30205b08}
+html[data-theme="light"] .card:hover{border-color:#b9a8df;box-shadow:0 12px 28px #30205b12}
+html[data-theme="light"] .metric{border-top-color:#e9e6ef}
+html[data-theme="light"] .signal.green{background:#e4f4eb;color:#237a52}
+html[data-theme="light"] .signal.lime{background:#eee9fa;color:#6545b8}
+html[data-theme="light"] .signal.amber{background:#f8efdf;color:#996117}
+html[data-theme="light"] .signal.red{background:#f8e8ec;color:#b43f58}
+html[data-theme="light"] .actions button{border-color:#e0deea;color:#555463}
+html[data-theme="light"] .actions button:hover{background:#f1edfa;border-color:#b9a8df;color:#6545b8}
+html[data-theme="light"] .floating-add{background:#7554c8;color:#fff;box-shadow:0 8px 25px #7554c83b}
+html[data-theme="light"] .theme-toggle{background:#fff;border-color:#e0deea;color:#4d4562}
+html[data-theme="light"] .save,html[data-theme="light"] .toast{background:#7554c8;color:#fff}
+@media(max-width:899px){.main{padding-top:20px}.topline{margin-bottom:24px}.headingrow{margin-bottom:20px}.brand-heading{gap:9px}.brand-heading .logo{width:33px;height:33px}h1{font-size:clamp(34px,8vw,44px)}.railstat{min-width:67px;padding:7px 7px}.railstat b{font-size:17px}.card{box-shadow:0 3px 12px #00000010}.card:hover{transform:none}}
+@media(max-width:520px){.topline{margin-bottom:20px}.eyebrow{font-size:9px}.headingrow{gap:9px}.railstats{margin-left:auto}.railstat{min-width:58px;padding:6px 5px}.railstat span{font-size:6px}.railstat b{font-size:15px}.controls{margin-bottom:11px}.search,.sort{min-height:41px}.card{border-radius:12px}}
+
 </style>
 </head>
 <body>
