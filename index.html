@@ -12,13 +12,13 @@
 :root{color-scheme:dark;--bg:#17191b;--surface:#1e2124;--surface2:#24282b;--line:#303639;--ink:#f1f3ef;--muted:#929b98;--soft:#c5ccc6;--accent:#c9f36b;--green:#a8e6a1;--amber:#f2c879;--red:#f08b8b}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}body{font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}
-.app{min-height:100vh;display:grid;grid-template-columns:70px minmax(0,1fr) 238px;max-width:1440px;margin:auto}
+.app{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 238px;max-width:1440px;margin:auto}
 .rail{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);display:flex;align-items:center;flex-direction:column;padding:22px 0;gap:15px;background:#191b1d}
 .logo{width:38px;height:38px;border-radius:12px;background:var(--accent);color:#17191b;display:grid;place-items:center;font-weight:700;font-size:18px;letter-spacing:-.08em;margin-bottom:24px}
 .navbtn{width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:#8e9793;display:grid;place-items:center;transition:.18s}
 .navbtn.active,.navbtn:hover{background:#2a3025;color:var(--accent)}.navbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .railbottom{margin-top:auto}
-.main{padding:36px clamp(20px,4vw,54px) 50px;min-width:0}
+.main{grid-column:1;padding:36px clamp(20px,4vw,54px) 50px;min-width:0}
 .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}
 .eyebrow{font:12px 'DM Mono',monospace;letter-spacing:.17em;color:var(--muted);text-transform:uppercase}
 .live{display:flex;align-items:center;gap:7px;font:10px 'DM Mono',monospace;color:#a8b1ac;letter-spacing:.1em}.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px #c9f36b80}
@@ -167,21 +167,35 @@ html[data-theme="light"] .empty{border-color:#d0cec7}
 .floating-add svg{width:27px;height:27px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
 .floating-add:active{transform:scale(.94)}
 @media(max-width:520px){.floating-add{right:18px;bottom:calc(22px + env(safe-area-inset-bottom));width:58px;height:58px}}
+
+/* Compact collection stats in the page header; left navigation rail removed */
+.headingrow{align-items:center}
+.railstats{display:flex;flex-direction:row;gap:8px;width:auto;padding:0;flex:none}
+.railstat{min-width:78px;padding:8px 10px;gap:3px;border-radius:9px}
+.railstat span{font-size:8px;letter-spacing:.06em}
+.railstat b{font-size:19px}
+@media(max-width:850px){
+ .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;min-height:100vh}
+ .main{grid-column:1;grid-row:1;padding:22px clamp(14px,4vw,24px) 40px}
+ .headingrow{gap:10px;flex-wrap:wrap}
+ .railstats{width:auto;padding:0;gap:6px}
+ .railstat{min-width:70px;padding:7px 8px}
+}
+@media(max-width:520px){
+ .main{padding:16px 13px 35px}
+ .headingrow{align-items:center}
+ .railstats{gap:5px}
+ .railstat{min-width:62px;padding:6px 6px}
+ .railstat span{font-size:7px}
+ .railstat b{font-size:16px}
+}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="rail" aria-label="Navigation">
- <div class="logo">B.</div>
- <div class="railstats" aria-label="Collection overview">
- <div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div>
- <div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div>
-</div>
- <div class="railbottom"><button class="navbtn" id="navInfo" title="About signals" aria-label="About signals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></button></div>
-</aside>
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span></div>
- <div class="headingrow"><div><h1>PSA Index<span style="color:var(--accent)">.</span></h1></div><button class="add" id="add">＋ Add card</button></div>
+ <div class="headingrow"><div><h1>PSA Index<span style="color:var(--accent)">.</span></h1></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
  <div class="controls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
  <div class="legend"><span><i style="background:var(--green)"></i>STRONG 100%+</span><span><i style="background:var(--accent)"></i>GOOD 50%+</span><span><i style="background:var(--amber)"></i>WATCH 20%+</span><span><i style="background:var(--red)"></i>LOW</span></div>
  <div class="countrow"><span>Tracked cards</span><span id="count">0 / 0</span></div>
