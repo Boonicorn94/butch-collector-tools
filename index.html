@@ -248,7 +248,7 @@ function render(){
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
 function exportData(){let blob=new Blob([JSON.stringify({app:'PSA Index',version:3,exportedAt:new Date().toISOString(),cards},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='psa-index-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Backup exported.');}
-$('add').onclick=openAdd;$('navAdd').onclick=openAdd;
+$('navAdd').onclick=openAdd;
 $('choosePhoto').onclick=()=>$('photoFile').click();
 $('photoFile').onchange=async e=>{
  const file=e.target.files&&e.target.files[0];if(!file)return;
