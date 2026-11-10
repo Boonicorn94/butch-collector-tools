@@ -938,6 +938,36 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 .cards.thumbnail-mode .valuation-bottom .gap-cash{font-size:13px!important}
 .cards.thumbnail-mode .valuation-bottom .gap{font-size:8px!important}
 
+
+/* List view: align the card photo only with the complete valuation stack */
+@media(min-width:900px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  grid-template-columns:210px minmax(0,1fr)!important;
+  grid-template-rows:auto auto auto!important;
+  grid-template-areas:none!important;
+  align-items:stretch!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop{display:contents!important}
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.cardidentity{
+  grid-column:2!important;grid-row:1!important;
+  padding:20px 30px 10px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb{
+  grid-column:1!important;grid-row:2!important;
+  width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
+  align-self:stretch!important;border:0!important;border-right:1px solid var(--line)!important;
+  border-radius:0!important;padding:12px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.card-valuation{
+  grid-column:2!important;grid-row:2!important;
+  width:auto!important;margin:0!important;padding:0 30px 16px!important;
+  align-self:stretch!important;justify-content:space-between!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardbottom{
+  grid-column:2!important;grid-row:3!important;
+ }
+}
+
 </style>
 </head>
 <body>
