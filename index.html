@@ -35,6 +35,26 @@ h1{font-size:clamp(36px,5vw,58px);line-height:.98;letter-spacing:-.065em;margin:
 .legend span{display:flex;align-items:center;gap:6px}.legend i{width:6px;height:6px;border-radius:50%;display:inline-block}
 .countrow{display:flex;justify-content:space-between;align-items:center;padding:0 2px 10px;color:var(--muted);font:10px 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.1em}
 .cards{display:flex;flex-direction:column;gap:8px}
+.count-actions{display:flex;align-items:center;gap:12px}
+.view-toggle{background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 9px;font:9px 'DM Mono',monospace;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.view-toggle.active{background:var(--surface2);border-color:var(--accent);color:var(--ink)}
+.cards.thumbnail-mode{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cards.thumbnail-mode .card{display:flex;flex-direction:column;min-width:0;min-height:0;padding:10px;overflow:hidden;gap:8px}
+.cards.thumbnail-mode .cardthumb{width:100%;height:150px;min-height:0;max-height:150px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:5px}
+.cards.thumbnail-mode .cardtop{padding:0;align-items:flex-start;gap:6px;min-width:0}
+.cards.thumbnail-mode .cardidentity{min-width:0}
+.cards.thumbnail-mode .cardname{font-size:12px;line-height:1.25}
+.cards.thumbnail-mode .set{font-size:9px;margin-top:4px}
+.cards.thumbnail-mode .signal{font-size:8px;padding:5px 6px}
+.cards.thumbnail-mode .metrics{display:none}
+.cards.thumbnail-mode .cardbottom{margin:0;padding:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cards.thumbnail-mode .gap{font-size:11px}
+.cards.thumbnail-mode .gap-summary{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cards.thumbnail-mode .gap-cash{font-size:10px}
+.cards.thumbnail-mode .actions button{font-size:9px;padding:5px 6px}
+@media(max-width:899px){.cards.thumbnail-mode{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.cards.thumbnail-mode .card{padding:7px}.cards.thumbnail-mode .cardthumb{height:100px;max-height:100px}.cards.thumbnail-mode .cardname{font-size:10px}.cards.thumbnail-mode .signal{font-size:7px;padding:4px}.cards.thumbnail-mode .actions{width:100%}.cards.thumbnail-mode .actions button{flex:1}}
+@media(max-width:520px){.count-actions{gap:7px}.view-toggle{padding:6px 7px;font-size:8px}.cards.thumbnail-mode{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.cards.thumbnail-mode .cardthumb{height:115px;max-height:115px}.cards.thumbnail-mode .cardname{font-size:11px}}
+
 .card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;transition:border-color .18s}
 .card:hover{border-color:#59634d}
 .cardtop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
@@ -414,7 +434,7 @@ html[data-theme="light"] .detail-gap small{color:#777386}
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
  <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
 
- <div class="countrow"><span id="listHeading">Tracked cards</span><span id="count">0 / 0</span></div>
+ <div class="countrow"><span id="listHeading">Tracked cards</span><div class="count-actions"><button type="button" class="view-toggle" id="viewToggle" aria-pressed="false" title="Switch to thumbnail view">▦ Thumbnail</button><span id="count">0 / 0</span></div></div>
  <div class="cards" id="list"></div>
  <section id="gradingPanel" class="grading-panel hidden">
  <div class="grading-intro"><div class="detail-kicker">BUTCH AI LAB / CARD CONDITION</div><h2>Could this get a PSA 10?</h2><p>Upload clear, straight-on photos of the front and back. The AI checks visible condition risks and gives an estimate — not an official grade or authenticity certificate.</p></div>
@@ -509,6 +529,15 @@ $('photoFile').onchange=async e=>{
 // The former sidebar's info control was removed with the sidebar.
 $('close').onclick=()=>$('modal').close();$('cancel').onclick=()=>$('modal').close();
 $('search').oninput=render;$('sort').onchange=render;
+let thumbnailMode=false;
+$('viewToggle').onclick=()=>{
+ thumbnailMode=!thumbnailMode;
+ $('list').classList.toggle('thumbnail-mode',thumbnailMode);
+ $('viewToggle').classList.toggle('active',thumbnailMode);
+ $('viewToggle').setAttribute('aria-pressed',String(thumbnailMode));
+ $('viewToggle').textContent=thumbnailMode?'☷ List':'▦ Thumbnail';
+ $('viewToggle').title=thumbnailMode?'Switch to list view':'Switch to thumbnail view';
+};
 $('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').onclick=()=>{activeTab='top10';render();};$('gradingTab').onclick=()=>{activeTab='grading';render();};
 let selectedDetailId=null;
 function showCardDetail(id){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';$('detailModal').showModal();}
