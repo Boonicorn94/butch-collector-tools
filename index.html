@@ -813,6 +813,27 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 }
 
 
+/* Balance the three valuation panels and bring the right-side group slightly inward */
+.cardtop{align-items:center}
+.card-valuation{width:min(100%,520px);margin-right:clamp(0px,1.2vw,14px);gap:8px!important}
+.card-valuation .metrics.compact-prices{gap:8px!important}
+.card-valuation .metrics.compact-prices .metric{min-height:66px;display:flex;flex-direction:column;justify-content:center}
+.valuation-bottom{margin-top:0!important}
+.valuation-bottom .gap-summary{min-height:66px!important}
+@media(max-width:899px){
+ .card-valuation{width:100%;margin-right:0;gap:7px!important}
+ .card-valuation .metrics.compact-prices{gap:7px!important}
+ .card-valuation .metrics.compact-prices .metric{min-height:56px}
+ .valuation-bottom .gap-summary{min-height:56px!important}
+}
+@media(max-width:520px){
+ .card-valuation{gap:6px!important}
+ .card-valuation .metrics.compact-prices{gap:6px!important}
+ .card-valuation .metrics.compact-prices .metric{min-height:50px}
+ .valuation-bottom .gap-summary{min-height:50px!important}
+}
+
+/* Thumbnail mode retains its compact sizing and even vertical rhythm */
 /* Thumbnail cards: title and set first, valuation directly underneath */
 .cards.thumbnail-mode .cardtop{
  display:flex!important;
