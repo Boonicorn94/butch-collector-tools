@@ -768,6 +768,37 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .detail-modal{left:14px!important;width:calc(100% - 28px)!important}
 }
 
+
+/* Centre the profit-gap figure in its own panel beneath both price panels */
+.card-valuation{align-items:stretch}
+.valuation-bottom{width:100%;justify-content:center;gap:0;margin-top:2px}
+.valuation-bottom .gap-summary{
+ width:100%;
+ min-height:58px;
+ display:flex;
+ flex-direction:row;
+ align-items:center;
+ justify-content:center;
+ gap:12px;
+ padding:9px 14px;
+ border:1px solid rgba(201,243,107,.38);
+ border-radius:9px;
+ background:var(--surface2);
+}
+.valuation-bottom .gap-cash{font-size:clamp(24px,2.5vw,32px)!important;line-height:1;color:var(--accent)!important}
+.valuation-bottom .gap{font-size:14px!important;font-weight:800!important;letter-spacing:.04em}
+.valuation-bottom .signal{display:none!important}
+@media(max-width:899px){
+ .valuation-bottom .gap-summary{min-height:48px;padding:7px 10px;gap:9px}
+ .valuation-bottom .gap-cash{font-size:24px!important}
+ .valuation-bottom .gap{font-size:12px!important}
+}
+@media(max-width:520px){
+ .valuation-bottom .gap-summary{min-height:44px;padding:6px 8px;gap:8px}
+ .valuation-bottom .gap-cash{font-size:22px!important}
+ .valuation-bottom .gap{font-size:11px!important}
+}
+
 </style>
 </head>
 <body>
