@@ -317,6 +317,40 @@ html[data-theme="light"] .save,html[data-theme="light"] .toast{background:#7554c
 .main{width:100%;max-width:1440px;padding-left:clamp(14px,2.2vw,32px);padding-right:clamp(14px,2.2vw,32px)}
 @media(max-width:899px){.main{width:100%;max-width:none;padding-left:clamp(12px,2.5vw,20px);padding-right:clamp(12px,2.5vw,20px)}}
 @media(max-width:520px){.main{padding-left:9px;padding-right:9px}}
+
+/* Stronger card hierarchy and tap-to-inspect gap panel */
+@media(min-width:900px){.cardname{font-size:clamp(27px,2.2vw,34px);font-weight:700;letter-spacing:-.055em;line-height:1.08}.cardtop{padding-top:18px}.cardbottom{padding-top:9px;padding-bottom:15px}}
+@media(max-width:899px){.card.has-photo .cardname{font-size:clamp(17px,4.5vw,21px);font-weight:700;letter-spacing:-.045em;line-height:1.08}.card:not(.has-photo) .cardname{font-size:19px;font-weight:700;letter-spacing:-.045em}}
+.card{cursor:pointer}
+.card .actions,.card .actions button{cursor:pointer}
+.cardbottom{align-items:flex-end}
+.gap-summary{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.gap-cash{font:700 clamp(17px,2vw,22px) 'Space Grotesk',sans-serif;letter-spacing:-.045em;color:var(--ink)}
+.gap{font-size:10px;letter-spacing:.08em}
+.detail-modal{width:calc(100% - 28px);max-width:480px;padding:22px;background:linear-gradient(145deg,#1d1b27,#15171d);border:1px solid #51416f;border-radius:20px;color:var(--ink)}
+.detail-modal::backdrop{background:#07070bd9;backdrop-filter:blur(7px)}
+.detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:23px}
+.detail-kicker{font:9px 'DM Mono',monospace;letter-spacing:.17em;color:#b9a5ff;margin-bottom:10px}
+.detail-head h2{font-size:clamp(24px,6vw,32px);line-height:1.05;letter-spacing:-.06em;margin:0;font-weight:700}
+.detail-set{font-size:12px;color:var(--muted);margin-top:7px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.detail-stat{background:#22232c;border:1px solid #343342;border-radius:12px;padding:14px}
+.detail-stat span,.detail-gap>span{display:block;font:9px 'DM Mono',monospace;letter-spacing:.13em;color:#9693a6}
+.detail-stat b{display:block;font-size:23px;letter-spacing:-.05em;margin-top:8px}
+.detail-gap{margin-top:10px;padding:19px;border-radius:14px;background:linear-gradient(135deg,#302747,#211e2d);border:1px solid #5c4a80}
+.detail-gap strong{display:block;font-size:clamp(31px,8vw,42px);line-height:1.05;letter-spacing:-.065em;color:#d3c4ff;margin-top:9px}
+.detail-gap b{display:inline-block;margin-top:9px;font:600 15px 'DM Mono',monospace;color:#8ce1b4}
+.detail-gap small{display:block;color:#aaa4b9;font-size:10px;margin-top:10px}
+.detail-actions{display:flex;gap:9px;margin-top:17px}
+.detail-actions button{flex:1;border:0;border-radius:10px;padding:13px;font-weight:700;font-size:12px}
+html[data-theme="light"] .detail-modal{background:#fff;border-color:#d8ccef;color:#20202a}
+html[data-theme="light"] .detail-stat{background:#f7f5fb;border-color:#e6e0f1}
+html[data-theme="light"] .detail-stat span,html[data-theme="light"] .detail-gap>span{color:#777386}
+html[data-theme="light"] .detail-gap{background:linear-gradient(135deg,#eee9fa,#f7f4fc);border-color:#d8ccef}
+html[data-theme="light"] .detail-gap strong{color:#6545b8}
+html[data-theme="light"] .detail-gap b{color:#237a52}
+html[data-theme="light"] .detail-gap small{color:#777386}
+
 </style>
 </head>
 <body>
@@ -338,6 +372,7 @@ html[data-theme="light"] .save,html[data-theme="light"] .toast{background:#7554c
 <div class="field"><label for="psa10">PSA 10 reference (£)</label><input id="psa10" type="number" min="0" max="100000000" step="0.01" required inputmode="decimal" placeholder="1100"></div>
 <div class="field"><label>Card image (optional)</label><button type="button" class="cancel" id="choosePhoto" style="padding:11px;border-radius:9px">＋ Choose image</button><input id="photoFile" type="file" accept="image/*" hidden><input id="imageUrl" type="hidden"><div id="photoStatus" style="font-size:10px;color:#a8e6a1;min-height:14px"></div></div>
 <div class="formbuttons"><button type="button" class="cancel" id="cancel">Cancel</button><button class="save" type="button" id="saveCard">Save card</button></div></form></dialog>
+<dialog id="detailModal" class="detail-modal"><div class="detail-head"><div><div class="detail-kicker">CARD GAP ANALYSIS</div><h2 id="detailName">Card</h2><div id="detailSet" class="detail-set"></div></div><button class="close" type="button" id="detailClose">✕</button></div><div class="detail-grid"><div class="detail-stat"><span>RAW VALUE</span><b id="detailRaw">—</b></div><div class="detail-stat"><span>PSA 10 VALUE</span><b id="detailPsa">—</b></div></div><div class="detail-gap"><span>PROFIT GAP</span><strong id="detailCash">—</strong><b id="detailPercent">—</b><small>Difference between PSA 10 reference and raw price</small></div><div class="detail-actions"><button type="button" class="cancel" id="detailEdit">Edit card</button><button type="button" class="save" id="detailDone">Done</button></div></dialog>
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch colour theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
 <button class="floating-add" id="navAdd" type="button" title="Add card" aria-label="Add card"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <input class="hidden" type="file" id="importFile" accept=".json,application/json"><div class="toast" id="toast" role="status"></div>
@@ -362,7 +397,7 @@ function render(){
  $('averageGap').innerHTML=(cards.length?(cards.reduce((s,c)=>s+gap(c),0)/cards.length).toFixed(0):'—')+'<span class="statunit">%</span>';
  $('count').textContent=shown.length+' / '+cards.length;
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
- $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><span class="signal ${cl}">${label}</span></div><div class="metrics"><div class="metric"><span>Raw</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div><div class="metric profit-gap"><span>Profit Gap value</span><b>${money(d)}</b></div></div><div class="cardbottom"><span class="gap ${cl}">${g>=0?'+':''}${g.toFixed(1)}% GAP</span><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
+ $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><span class="signal ${cl}">${label}</span></div><div class="metrics"><div class="metric"><span>Raw</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div><div class="metric profit-gap"><span>Profit Gap value</span><b>${money(d)}</b></div></div><div class="cardbottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap ${cl}">${g>=0?'+':''}${g.toFixed(1)}% GAP</span></div><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
 }
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
@@ -394,7 +429,10 @@ $('photoFile').onchange=async e=>{
 // The former sidebar's info control was removed with the sidebar.
 $('close').onclick=()=>$('modal').close();$('cancel').onclick=()=>$('modal').close();
 $('search').oninput=render;$('sort').onchange=render;
-$('list').onclick=e=>{let a=e.target.closest('[data-edit]'),d=e.target.closest('[data-delete]');if(a)edit(a.dataset.edit);if(d){let c=cards.find(x=>x.id===d.dataset.delete);if(c&&confirm('Delete '+c.name+' from the public shared watchlist?')){const old=cards;cards=cards.filter(x=>x.id!==c.id);save().then(ok=>{if(ok)notify('Card deleted for everyone.');else cards=old;});}}};
+let selectedDetailId=null;
+function showCardDetail(id){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';$('detailModal').showModal();}
+$('detailClose').onclick=()=>$('detailModal').close();$('detailDone').onclick=()=>$('detailModal').close();$('detailEdit').onclick=()=>{const id=selectedDetailId;$('detailModal').close();if(id)edit(id);};
+$('list').onclick=e=>{let a=e.target.closest('[data-edit]'),d=e.target.closest('[data-delete]');if(a){e.stopPropagation();edit(a.dataset.edit);return;}if(d){e.stopPropagation();let c=cards.find(x=>x.id===d.dataset.delete);if(c&&confirm('Delete '+c.name+' from the public shared watchlist?')){const old=cards;cards=cards.filter(x=>x.id!==c.id);save().then(ok=>{if(ok)notify('Card deleted for everyone.');else cards=old;});}return;}const card=e.target.closest('.card');if(card){const first=card.querySelector('[data-edit]');if(first)showCardDetail(first.dataset.edit);}};
 async function saveCard(){
  let name=$('name').value.trim(),rawText=$('raw').value.trim(),psaText=$('psa10').value.trim();
  let raw=Number(rawText),psa10=Number(psaText);
