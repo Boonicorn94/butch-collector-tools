@@ -968,6 +968,43 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  }
 }
 
+
+/* List view on phones/tablets: photo spans exactly the valuation stack height */
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  display:grid!important;
+  grid-template-columns:76px minmax(0,1fr)!important;
+  grid-template-rows:auto auto auto!important;
+  grid-template-areas:none!important;
+  align-items:stretch!important;
+  column-gap:9px!important;
+  row-gap:7px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop{display:contents!important}
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.cardidentity{
+  grid-column:1/-1!important;grid-row:1!important;
+  padding:0 0 2px!important;align-self:start!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb{
+  grid-column:1!important;grid-row:2!important;
+  width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
+  align-self:stretch!important;object-fit:contain!important;
+  margin:0!important;border:1px solid var(--line)!important;border-radius:7px!important;
+  padding:4px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.card-valuation{
+  grid-column:2!important;grid-row:2!important;
+  width:100%!important;min-width:0!important;margin:0!important;padding:0!important;
+  align-self:stretch!important;justify-content:space-between!important;gap:6px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardbottom{
+  grid-column:1/-1!important;grid-row:3!important;margin-top:0!important;
+ }
+}
+@media(max-width:520px){
+ .cards:not(.thumbnail-mode) .card.has-photo{grid-template-columns:68px minmax(0,1fr)!important;column-gap:8px!important}
+}
+
 </style>
 </head>
 <body>
