@@ -1148,6 +1148,37 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  margin:0!important;
 }
 
+
+/* Image slot: List mode keeps its existing grid behavior; Thumbnail mode sizes the slot from valuation only */
+.cards:not(.thumbnail-mode) .cardthumb-slot{display:contents!important}
+.cards.thumbnail-mode .card.has-photo>.cardthumb-slot{
+ grid-column:1!important;
+ grid-row:2!important;
+ position:relative!important;
+ display:block!important;
+ align-self:stretch!important;
+ justify-self:stretch!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ overflow:hidden!important;
+}
+.cards.thumbnail-mode .card.has-photo>.cardthumb-slot>.cardthumb{
+ position:absolute!important;
+ inset:0!important;
+ display:block!important;
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ max-width:100%!important;
+ max-height:100%!important;
+ margin:0!important;
+ object-fit:contain!important;
+}
+
 </style>
 </head>
 <body>
@@ -1227,7 +1258,7 @@ function render(){
  $('averageGap').innerHTML=(cards.length?(cards.reduce((s,c)=>s+gap(c),0)/cards.length).toFixed(0):'—')+'<span class="statunit">%</span>';
  $('count').textContent=isTopTen?shown.length+' / '+Math.min(cards.length,10):shown.length+' / '+cards.length;
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
- $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><div class="card-valuation"><div class="metrics compact-prices"><div class="metric"><span>RAW</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div></div><div class="valuation-bottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap ${cl}">${g>=0?"+":""}${g.toFixed(1)}% GAP</span></div><span class="signal ${cl}">${label}</span></div></div></div><div class="cardbottom"><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
+ $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img?`<div class="cardthumb-slot">${img}</div>`:""}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><div class="card-valuation"><div class="metrics compact-prices"><div class="metric"><span>RAW</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div></div><div class="valuation-bottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap ${cl}">${g>=0?"+":""}${g.toFixed(1)}% GAP</span></div><span class="signal ${cl}">${label}</span></div></div></div><div class="cardbottom"><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
 }
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
