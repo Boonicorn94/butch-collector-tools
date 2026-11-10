@@ -409,7 +409,7 @@ function render(){
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
  const createdAt=c=>Number(c.createdAt)||Number(String(c.id||'').match(/^c-(\d+)-/)?.[1])||0;
  if(isTopTen){
-  shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
+  shown.sort((a,b)=>gap(b)-gap(a));
   shown=shown.slice(0,10);
  }else if(mode==='newest')shown.sort((a,b)=>createdAt(b)-createdAt(a));
  else if(mode==='oldest')shown.sort((a,b)=>createdAt(a)-createdAt(b));
