@@ -318,6 +318,16 @@ html[data-theme="light"] .save,html[data-theme="light"] .toast{background:#7554c
 @media(max-width:899px){.main{width:100%;max-width:none;padding-left:clamp(12px,2.5vw,20px);padding-right:clamp(12px,2.5vw,20px)}}
 @media(max-width:520px){.main{padding-left:9px;padding-right:9px}}
 
+
+/* Purchase shortlist tabs */
+.tabbar{display:flex;gap:7px;border-bottom:1px solid var(--line);margin:0 0 17px;padding-bottom:9px;overflow-x:auto}
+.list-tab{display:flex;align-items:center;gap:9px;white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:9px;padding:10px 13px;font-size:12px;font-weight:600;transition:.18s}
+.list-tab.active{background:#292338;border-color:#4d3c70;color:#d3c4ff}
+.list-tab:hover{color:var(--ink)}
+.tab-count{font:10px 'DM Mono',monospace;background:#3a3150;color:#d3c4ff;border-radius:20px;padding:3px 7px}
+html[data-theme="light"] .list-tab.active{background:#eee9fa;border-color:#d8ccef;color:#6545b8}
+html[data-theme="light"] .tab-count{background:#e4def3;color:#6545b8}
+
 /* Stronger card hierarchy and tap-to-inspect gap panel */
 @media(min-width:900px){.cardname{font-size:clamp(27px,2.2vw,34px);font-weight:700;letter-spacing:-.055em;line-height:1.08}.cardtop{padding-top:18px}.cardbottom{padding-top:9px;padding-bottom:15px}}
 @media(max-width:899px){.card.has-photo .cardname{font-size:clamp(17px,4.5vw,21px);font-weight:700;letter-spacing:-.045em;line-height:1.08}.card:not(.has-photo) .cardname{font-size:19px;font-weight:700;letter-spacing:-.045em}}
@@ -358,9 +368,10 @@ html[data-theme="light"] .detail-gap small{color:#777386}
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><h1>PSA Index<span style="color:var(--accent)">.</span></h1></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
- <div class="controls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
+ <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button></div>
+ <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
 
- <div class="countrow"><span>Tracked cards</span><span id="count">0 / 0</span></div>
+ <div class="countrow"><span id="listHeading">Tracked cards</span><span id="count">0 / 0</span></div>
  <div class="cards" id="list"></div>
 </main>
 
@@ -378,7 +389,7 @@ html[data-theme="light"] .detail-gap small{color:#777386}
 <input class="hidden" type="file" id="importFile" accept=".json,application/json"><div class="toast" id="toast" role="status"></div>
 <script>
 (()=>{'use strict';
-const KEY='psa_price_indicator_cards_v3', $=id=>document.getElementById(id);let cards=[],toastTimer;
+const KEY='psa_price_indicator_cards_v3', $=id=>document.getElementById(id);let cards=[],toastTimer,activeTab='tracked';
 const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:2}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gap=c=>(Number(c.psa10)-Number(c.raw))/Number(c.raw)*100;
@@ -388,14 +399,24 @@ function notify(s){$('toast').textContent=s;$('toast').classList.add('show');cle
 async function load(){try{const r=await fetch('/api/cards',{cache:'no-store'});if(!r.ok)throw new Error('load');const j=await r.json();cards=Array.isArray(j.cards)?j.cards.filter(valid):[];render();}catch(e){cards=[];render();notify('Could not load the shared watchlist. Refresh to retry.');}}
 async function save(){try{const r=await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cards})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Save failed');try{localStorage.setItem(KEY,JSON.stringify(cards));}catch(_){}render();return true;}catch(e){alert(e.message||'Could not save to the shared watchlist. Please try again.');render();return false;}}
 function render(){
+ const isTopTen=activeTab==='top10';
+ $('trackedControls').classList.toggle('hidden',isTopTen);
+ $('trackedTab').classList.toggle('active',!isTopTen);
+ $('topTenTab').classList.toggle('active',isTopTen);
+ $('trackedTab').setAttribute('aria-selected',String(!isTopTen));
+ $('topTenTab').setAttribute('aria-selected',String(isTopTen));
+ $('listHeading').textContent=isTopTen?'Top 10 cards to purchase':'Tracked cards';
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
  const createdAt=c=>Number(c.createdAt)||Number(String(c.id||'').match(/^c-(\d+)-/)?.[1])||0;
- if(mode==='newest')shown.sort((a,b)=>createdAt(b)-createdAt(a));
+ if(isTopTen){
+  shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
+  shown=shown.slice(0,10);
+ }else if(mode==='newest')shown.sort((a,b)=>createdAt(b)-createdAt(a));
  else if(mode==='oldest')shown.sort((a,b)=>createdAt(a)-createdAt(b));
  else shown.sort((a,b)=>(Number(b.psa10)-Number(b.raw))-(Number(a.psa10)-Number(a.raw)));
  $('totalCards').textContent=cards.length;
  $('averageGap').innerHTML=(cards.length?(cards.reduce((s,c)=>s+gap(c),0)/cards.length).toFixed(0):'—')+'<span class="statunit">%</span>';
- $('count').textContent=shown.length+' / '+cards.length;
+ $('count').textContent=isTopTen?shown.length+' / '+Math.min(cards.length,10):shown.length+' / '+cards.length;
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
  $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><span class="signal ${cl}">${label}</span></div><div class="metrics"><div class="metric"><span>Raw</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div><div class="metric profit-gap"><span>Profit Gap value</span><b>${money(d)}</b></div></div><div class="cardbottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap ${cl}">${g>=0?'+':''}${g.toFixed(1)}% GAP</span></div><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
 }
@@ -429,6 +450,7 @@ $('photoFile').onchange=async e=>{
 // The former sidebar's info control was removed with the sidebar.
 $('close').onclick=()=>$('modal').close();$('cancel').onclick=()=>$('modal').close();
 $('search').oninput=render;$('sort').onchange=render;
+$('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').onclick=()=>{activeTab='top10';render();};
 let selectedDetailId=null;
 function showCardDetail(id){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';$('detailModal').showModal();}
 $('detailClose').onclick=()=>$('detailModal').close();$('detailDone').onclick=()=>$('detailModal').close();$('detailEdit').onclick=()=>{const id=selectedDetailId;$('detailModal').close();if(id)edit(id);};
