@@ -462,10 +462,9 @@ html[data-theme="light"] .detail-gap small{color:#777386}
  <div class="entry-lockup"><div class="entry-logo">B.</div><div class="entry-title">PSA Index<span>.</span></div><p class="entry-tagline">Find the gems. See the potential. Make the move.</p></div>
  <div class="entry-prompt">Tap anywhere to enter</div>
 </div>
-<div class="auth-gate hidden" id="authGate"><form class="auth-card" id="authForm"><div class="auth-brand">BUTCH COLLECTOR TOOLS / PRIVATE ACCESS</div><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p>This is a shared private workspace. Enter the access password to view and manage the collection.</p><label for="accessPassword">Access password</label><input id="accessPassword" type="password" autocomplete="current-password" required minlength="12" placeholder="Enter shared password"><button type="submit" id="authSubmit">Unlock app</button><p class="auth-message" id="authMessage" role="status"></p></form></div>
-<div class="app hidden" id="appRoot">
+<div class="app" id="appRoot">
 <main class="main">
- <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="lockApp">LOCK APP</button></div>
+ <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="exitApp">EXIT</button></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><div class="brand-title"><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p class="brand-tagline">Find the gems. See the potential. Make the move.</p></div></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
  <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
@@ -649,45 +648,20 @@ try{savedTheme=localStorage.getItem('butchCollectorTheme')||'dark';}catch(_){}
 applyTheme(savedTheme==='light'?'light':'dark');
 themeToggle.onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 
-let entryReady=false,hasSession=false;
-async function checkSession(){
- const message=$('authMessage');
- try{
-  const check=await fetch('/api/auth',{cache:'no-store'});
-  const state=await check.json();
-  hasSession=Boolean(state.configured&&state.ok);
-  if(!state.configured)message.textContent='Owner setup required: add the two access settings in Vercel.';
- }catch(_){message.textContent='Could not check access. Refresh and try again.';}
+function exitToSplash(){
+ $('appRoot').classList.add('hidden');
+ $('entrySplash').classList.remove('hidden','leaving');
 }
-function revealEntry(){
- if(entryReady)return;
- entryReady=true;
+$('entrySplash').addEventListener('click',()=>{
  $('entrySplash').classList.add('leaving');
- setTimeout(()=>{
-  $('entrySplash').classList.add('hidden');
-  if(hasSession){$('appRoot').classList.remove('hidden');render();load();}
-  else $('authGate').classList.remove('hidden');
- },650);
-}
-$('entrySplash').addEventListener('click',revealEntry);
-$('entrySplash').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();revealEntry();}});
-$('authForm').addEventListener('submit',async e=>{
- e.preventDefault();
- const button=$('authSubmit'),message=$('authMessage');
- button.disabled=true;button.textContent='Checking…';message.textContent='';
- try{
-  const response=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$('accessPassword').value})});
-  const result=await response.json();
-  if(!response.ok)throw new Error(result.error||'Could not sign in.');
-  hasSession=true;$('authGate').classList.add('hidden');$('appRoot').classList.remove('hidden');$('accessPassword').value='';render();load();
- }catch(err){message.textContent=err.message||'Could not sign in.';}
- finally{button.disabled=false;button.textContent='Unlock app';}
+ setTimeout(()=>{$('entrySplash').classList.add('hidden');$('appRoot').classList.remove('hidden');render();load();},650);
 });
-$('lockApp').onclick=async()=>{
- try{await fetch('/api/auth',{method:'DELETE'});}catch(_){}
- hasSession=false;$('appRoot').classList.add('hidden');$('authGate').classList.remove('hidden');$('authMessage').textContent='App locked.';$('accessPassword').value='';
-};
-checkSession();
+$('entrySplash').addEventListener('keydown',e=>{
+ if(e.key==='Enter'||e.key===' '){e.preventDefault();$('entrySplash').click();}
+});
+$('exitApp').onclick=exitToSplash;
+$('entrySplash').classList.remove('hidden');
+
 })();
 </script>
 
