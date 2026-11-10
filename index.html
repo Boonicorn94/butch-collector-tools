@@ -471,6 +471,85 @@ body.pointer-active #ambientGlow{opacity:1}
 .card{translate:var(--card-shift-x,0px) var(--card-shift-y,0px);rotate:var(--card-tilt,0deg);transition:translate .24s cubic-bezier(.2,.8,.2,1),rotate .24s cubic-bezier(.2,.8,.2,1),border-color .2s,box-shadow .2s;will-change:translate,rotate}
 .card.pointer-near{border-color:#829c4a;box-shadow:0 8px 24px rgba(201,243,107,.10),inset 0 0 0 1px rgba(201,243,107,.08)}
 @media(prefers-reduced-motion:reduce){#ambientGlow{transition:none}.card{transition:border-color .2s,box-shadow .2s;translate:none!important;rotate:none!important}}
+
+/* Refined compact collector workspace */
+.main{padding-top:22px}
+.topline{margin-bottom:18px}
+.headingrow{margin-bottom:17px}
+.brand-heading{padding-bottom:15px}
+.brand-heading .logo{width:34px;height:34px;border-radius:9px}
+h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
+.railstats{gap:7px}
+.railstat{min-width:82px;padding:7px 10px;border-radius:9px}
+.railstat b{font-size:18px}
+.controls{gap:8px;margin-bottom:9px}
+.search,.sort{min-height:40px;border-radius:8px}
+.search{padding:10px 12px}
+.sort{padding:9px 11px}
+.countrow{padding:5px 2px 8px}
+.cards{gap:7px}
+.card{border-radius:10px}
+@media(min-width:900px){
+ .card{grid-template-columns:112px minmax(0,1fr);min-height:132px}
+ .cardthumb{min-height:132px;padding:7px}
+ .cardtop{padding:10px 14px 3px;gap:10px}
+ .cardname{font-size:19px;line-height:1.12}
+ .set{font-size:11px;margin-top:3px}
+ .signal{font-size:9px;padding:6px 8px}
+ .metrics{gap:9px;padding:4px 14px 5px}
+ .metric{padding-top:5px}
+ .metric span{font-size:9px}
+ .metric b{font-size:17px;margin-top:3px}
+ .metrics.compact-prices{gap:7px;margin-top:0}
+ .metrics.compact-prices .metric{padding:6px 9px;border-radius:7px}
+ .metrics.compact-prices .metric b{font-size:13px}
+ .cardbottom{padding:3px 14px 8px}
+ .gap{font-size:13px}
+ .actions button{font-size:9px;padding:5px 8px}
+}
+@media(max-width:899px){
+ .main{padding-top:7px}
+ .topline{margin-bottom:16px}
+ .headingrow{margin-bottom:14px}
+ .card{padding:9px 10px}
+ .card.has-photo{grid-template-columns:64px minmax(0,1fr);column-gap:8px}
+ .card.has-photo>.cardthumb{height:78px;min-height:78px;max-height:78px}
+ .card.has-photo .cardname{font-size:13px}
+ .card.has-photo .set{font-size:9px;margin-top:3px}
+ .card.has-photo>.metrics{margin-top:6px}
+ .card.has-photo>.cardbottom{margin-top:5px}
+ .metrics{gap:5px;margin-top:7px}
+ .metric{padding-top:5px}
+ .metric b{font-size:12px;margin-top:3px}
+ .cardbottom{margin-top:7px}
+}
+@media(max-width:520px){
+ .main{padding-left:10px;padding-right:10px;padding-bottom:28px}
+ .topline{margin-bottom:14px}
+ .headingrow{gap:7px;margin-bottom:12px}
+ .brand-heading{gap:8px}
+ .brand-heading .logo{width:30px;height:30px}
+ h1{font-size:32px}
+ .brand-tagline{font-size:10px;max-width:210px}
+ .railstats{gap:4px}
+ .railstat{min-width:55px;padding:5px 5px}
+ .railstat span{font-size:6px}
+ .railstat b{font-size:14px}
+ .search,.sort{min-height:38px}
+ .countrow{font-size:8px;padding-bottom:7px}
+ .cards{gap:6px}
+ .card{padding:8px;border-radius:9px}
+ .card.has-photo{grid-template-columns:58px minmax(0,1fr);column-gap:7px}
+ .card.has-photo>.cardthumb{height:72px;min-height:72px;max-height:72px}
+ .card.has-photo .cardname{font-size:12px}
+ .card.has-photo .signal{font-size:7px;padding:4px 5px}
+ .metrics{gap:4px}
+ .metric span{font-size:7px}
+ .metric b{font-size:11px}
+ .gap{font-size:11px}
+ .actions button{padding:4px 7px;font-size:8px}
+}
+
 </style>
 </head>
 <body>
