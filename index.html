@@ -1128,6 +1128,26 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  min-height:0!important;
 }
 
+
+/* Thumbnail mode: let the valuation stack set row height; overlay photo in that exact grid cell */
+.cards.thumbnail-mode .card.has-photo{position:relative!important}
+.cards.thumbnail-mode .card.has-photo>.cardthumb{
+ position:absolute!important;
+ grid-column:1!important;
+ grid-row:2!important;
+ inset:auto!important;
+ align-self:stretch!important;
+ justify-self:stretch!important;
+ width:auto!important;
+ height:auto!important;
+ min-width:0!important;
+ min-height:0!important;
+ max-width:100%!important;
+ max-height:none!important;
+ object-fit:contain!important;
+ margin:0!important;
+}
+
 </style>
 </head>
 <body>
