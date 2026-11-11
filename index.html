@@ -1267,6 +1267,87 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 }
 
 .avg-gap-modal{max-width:360px}.avg-gap-modal .detail-gap{margin-top:18px}.avg-gap-modal #avgGapModalValue{display:block;font-size:clamp(38px,10vw,54px);line-height:1.1;letter-spacing:-.06em;color:var(--accent);margin-top:8px}#averageGapTrigger{cursor:pointer;user-select:none;transition:transform .15s,border-color .15s}#averageGapTrigger:active{transform:scale(.97)}#averageGapTrigger:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* Optional compact density: shorter list rows while preserving the full-height image at left. */
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo{
+ grid-template-columns:88px minmax(0,1fr)!important;
+ column-gap:11px!important;
+ row-gap:4px!important;
+ padding:8px 10px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardthumb-slot{
+ width:88px!important;
+ min-width:88px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardtop>.cardidentity{
+ padding:0 1px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .cardname{
+ font-size:clamp(15px,1.45vw,19px)!important;
+ line-height:1.08!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .set{
+ font-size:11px!important;
+ margin-top:3px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardtop>.card-valuation{
+ gap:4px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices{
+ gap:5px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices .metric{
+ min-height:39px!important;
+ padding:4px 7px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices .metric span{
+ font-size:8px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices .metric b{
+ font-size:13px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .valuation-bottom .gap-summary{
+ min-height:39px!important;
+ padding:4px 8px!important;
+ gap:7px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .valuation-bottom .gap-cash{
+ font-size:19px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .valuation-bottom .gap{
+ font-size:10px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardbottom{
+ padding:0 1px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .card.has-photo .actions button{
+ font-size:10px!important;
+ padding:5px 8px!important;
+}
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo{
+  grid-template-columns:72px minmax(0,1fr)!important;
+  column-gap:8px!important;
+  padding:7px!important;
+ }
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardthumb-slot{
+  width:72px!important;
+  min-width:72px!important;
+ }
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices .metric{min-height:34px!important}
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo .card-valuation .metrics.compact-prices .metric b{font-size:12px!important}
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo .valuation-bottom .gap-summary{min-height:36px!important}
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo .valuation-bottom .gap-cash{font-size:17px!important}
+}
+@media(max-width:520px){
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo{
+  grid-template-columns:64px minmax(0,1fr)!important;
+  column-gap:7px!important;
+  padding:6px!important;
+ }
+ .cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardthumb-slot{width:64px!important;min-width:64px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1282,7 +1363,7 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
   <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
 
- <div class="countrow"><span id="listHeading">Tracked cards</span><div class="count-actions"><button type="button" class="view-toggle" id="viewToggle" aria-pressed="false" title="Switch to thumbnail view">▦ Thumbnail</button><span id="count">0 / 0</span></div></div>
+ <div class="countrow"><span id="listHeading">Tracked cards</span><div class="count-actions"><button type="button" class="view-toggle" id="densityToggle" aria-pressed="false" title="Make list cards more compact">↕ Compact</button><button type="button" class="view-toggle" id="viewToggle" aria-pressed="false" title="Switch to thumbnail view">▦ Thumbnail</button><span id="count">0 / 0</span></div></div>
  <div class="cards" id="list"></div>
  <section id="gradingPanel" class="grading-panel hidden">
  <div class="coming-soon-banner"><span class="coming-soon-kicker">COMING SOON</span><p>AI Grading is still in development. Try uploading front and back photos to preview the experience — scanning will be available soon.</p></div>
@@ -1381,7 +1462,15 @@ $('photoFile').onchange=async e=>{
 // The former sidebar's info control was removed with the sidebar.
 $('close').onclick=()=>$('modal').close();$('cancel').onclick=()=>$('modal').close();
 $('search').oninput=render;$('sort').onchange=render;
-let thumbnailMode=false;
+let thumbnailMode=false,compactMode=false;
+$('densityToggle').onclick=()=>{
+ compactMode=!compactMode;
+ $('list').classList.toggle('compact-mode',compactMode);
+ $('densityToggle').classList.toggle('active',compactMode);
+ $('densityToggle').setAttribute('aria-pressed',String(compactMode));
+ $('densityToggle').textContent=compactMode?'↕ Spacious':'↕ Compact';
+ $('densityToggle').title=compactMode?'Switch to spacious list cards':'Make list cards more compact';
+};
 $('viewToggle').onclick=()=>{
  thumbnailMode=!thumbnailMode;
  $('list').classList.toggle('thumbnail-mode',thumbnailMode);
