@@ -1418,6 +1418,22 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  display:block!important;
 }
 
+
+/* List mode: keep Edit/Delete together on the far right of each card row. */
+.cards:not(.thumbnail-mode) .cardbottom{
+ display:flex!important;
+ justify-content:flex-end!important;
+ align-items:center!important;
+}
+.cards:not(.thumbnail-mode) .cardbottom .actions{
+ margin-left:auto!important;
+ justify-content:flex-end!important;
+}
+/* Thumbnail mode: restore the previous compact profit display and leave its layout untouched. */
+.cards.thumbnail-mode .gap-title{display:none!important}
+.cards.thumbnail-mode .gap-percent-stack{display:contents!important}
+.cards.thumbnail-mode .valuation-bottom .gap::after{content:" GAP"}
+
 </style>
 </head>
 <body>
