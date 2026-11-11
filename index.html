@@ -1434,6 +1434,9 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 .cards.thumbnail-mode .gap-percent-stack{display:contents!important}
 .cards.thumbnail-mode .valuation-bottom .gap::after{content:" GAP"}
 
+
+/* Wishlist page */
+.wishlist-panel{max-width:900px}.wishlist-form{display:grid;grid-template-columns:1.3fr 1fr .7fr auto;gap:9px;margin:22px 0}.wishlist-form input{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--ink);font-size:12px;outline:none}.wishlist-list{display:flex;flex-direction:column;gap:8px}.wishlist-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:11px}.wishlist-item strong{display:block;font-size:14px}.wishlist-item span{display:block;color:var(--muted);font-size:11px;margin-top:4px}.wishlist-meta{display:flex;align-items:center;gap:14px;white-space:nowrap}.wishlist-meta b{font:11px 'DM Mono',monospace;color:var(--accent)}.wishlist-meta button{background:transparent;border:1px solid var(--line);border-radius:7px;color:var(--muted);padding:7px 9px;font-size:10px}@media(max-width:650px){.wishlist-form{grid-template-columns:1fr 1fr}.wishlist-form input:first-child{grid-column:1/-1}.wishlist-form button{grid-column:1/-1}.wishlist-item{align-items:flex-start;padding:13px}.wishlist-meta{flex-direction:column;align-items:flex-end;gap:8px}}
 </style>
 </head>
 <body>
@@ -1446,11 +1449,21 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 <main class="main">
  <div class="topline"><span class="eyebrow">BUTCH COLLECTOR TOOLS / 01</span><button type="button" class="lock-app" id="exitApp">EXIT</button></div>
  <div class="headingrow"><div class="brand-heading"><div class="logo" aria-label="Butch Collector Tools">B.</div><div class="brand-title"><h1>PSA Index<span style="color:var(--accent)">.</span></h1><p class="brand-tagline">Find the gems. See the potential. Make the move.</p></div></div><div class="railstats" aria-label="Collection overview"><div class="railstat"><span>CARDS</span><b id="totalCards">0</b></div><div class="railstat featured" id="averageGapTrigger" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="avgGapModal" title="Show average gap details"><span>AVG GAP</span><b id="averageGap">—<small>%</small></b></div></div></div>
- <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 to Purchase <span class="tab-count">10</span></button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
+ <div class="tabbar" role="tablist" aria-label="Card lists"><button class="list-tab active" id="trackedTab" type="button" role="tab" aria-selected="true">Tracked Cards</button><button class="list-tab" id="topTenTab" type="button" role="tab" aria-selected="false">Top 10 <span class="tab-count">10</span></button><button class="list-tab" id="wishlistTab" type="button" role="tab" aria-selected="false">Wishlist</button><button class="list-tab" id="gradingTab" type="button" role="tab" aria-selected="false">AI Grading <span class="tab-count">AI</span></button></div>
   <div class="controls" id="trackedControls"><input class="search" id="search" type="search" placeholder="Search cards…" autocomplete="off"><select class="sort" id="sort" aria-label="Card order"><option value="profit">Highest Profit Gap</option><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div>
 
  <div class="countrow"><span id="listHeading">Tracked cards</span><div class="count-actions"><button type="button" class="view-toggle" id="densityToggle" aria-pressed="false" title="Make list cards more compact">↕ Compact</button><button type="button" class="view-toggle" id="viewToggle" aria-pressed="false" title="Switch to thumbnail view">▦ Thumbnail</button><span id="count">0 / 0</span></div></div>
  <div class="cards" id="list"></div>
+ <section id="wishlistPanel" class="wishlist-panel hidden">
+  <div class="grading-intro"><div class="detail-kicker">YOUR NEXT FINDS</div><h2>Wishlist</h2><p>Keep a list of cards you want to pick up. Add a target price to remember what you’re willing to pay.</p></div>
+  <form id="wishlistForm" class="wishlist-form">
+   <input id="wishName" type="text" maxlength="120" placeholder="Card name" aria-label="Card name" required>
+   <input id="wishSet" type="text" maxlength="120" placeholder="Set / series (optional)" aria-label="Set or series">
+   <input id="wishPrice" type="number" min="0" step="0.01" placeholder="Target £ (optional)" aria-label="Target price in pounds">
+   <button class="add" type="submit">＋ Add to Wishlist</button>
+  </form>
+  <div class="wishlist-list" id="wishlistList"></div>
+ </section>
  <section id="gradingPanel" class="grading-panel hidden">
  <div class="coming-soon-banner"><span class="coming-soon-kicker">COMING SOON</span><p>AI Grading is still in development. Try uploading front and back photos to preview the experience — scanning will be available soon.</p></div>
  <div class="grading-intro"><div class="detail-kicker">BUTCH AI LAB / CARD CONDITION</div><h2>Could this get a PSA 10?</h2><p>Upload clear, straight-on photos of the front and back. The AI checks visible condition risks and gives an estimate — not an official grade or authenticity certificate.</p></div>
@@ -1479,27 +1492,27 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 <input class="hidden" type="file" id="importFile" accept=".json,application/json"><div class="toast" id="toast" role="status"></div>
 <script>
 (()=>{'use strict';
-const KEY='psa_price_indicator_cards_v3', $=id=>document.getElementById(id);let cards=[],toastTimer,activeTab='tracked',frontImage='',backImage='';
+const KEY='psa_price_indicator_cards_v3', $=id=>document.getElementById(id);let cards=[],wishlist=[],toastTimer,activeTab='tracked',frontImage='',backImage='';
 const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:2}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gap=c=>(Number(c.psa10)-Number(c.raw))/Number(c.raw)*100;
 const valid=c=>c&&typeof c.name==='string'&&Number.isFinite(Number(c.raw))&&Number(c.raw)>0&&Number.isFinite(Number(c.psa10))&&Number(c.psa10)>=0;
 function signal(c){let g=gap(c);return g>=100?['green','STRONG']:g>=50?['lime','GOOD']:g>=20?['amber','WATCH']:['red','LOW'];}
 function notify(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2100);}
-async function load(){try{const r=await fetch('/api/cards',{cache:'no-store'});if(!r.ok)throw new Error('load');const j=await r.json();cards=Array.isArray(j.cards)?j.cards.filter(valid):[];render();}catch(e){cards=[];render();notify('Could not load the shared watchlist. Refresh to retry.');}}
-async function save(){try{const r=await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cards})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Save failed');try{localStorage.setItem(KEY,JSON.stringify(cards));}catch(_){}render();return true;}catch(e){alert(e.message||'Could not save to the shared watchlist. Please try again.');render();return false;}}
+async function load(){try{const r=await fetch('/api/cards',{cache:'no-store'});if(!r.ok)throw new Error('load');const j=await r.json();cards=Array.isArray(j.cards)?j.cards.filter(valid):[];wishlist=Array.isArray(j.wishlist)?j.wishlist:[];render();}catch(e){cards=[];render();notify('Could not load the shared watchlist. Refresh to retry.');}}
+async function save(){try{const r=await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cards,wishlist})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Save failed');try{localStorage.setItem(KEY,JSON.stringify(cards));}catch(_){}render();return true;}catch(e){alert(e.message||'Could not save to the shared watchlist. Please try again.');render();return false;}}
 function render(){
- const isTopTen=activeTab==='top10',isGrading=activeTab==='grading';
- $('trackedControls').classList.toggle('hidden',isTopTen||isGrading);
- $('gradingPanel').classList.toggle('hidden',!isGrading);
- $('list').classList.toggle('hidden',isGrading);
- $('count').parentElement.classList.toggle('hidden',isGrading);
+ const isTopTen=activeTab==='top10',isGrading=activeTab==='grading',isWishlist=activeTab==='wishlist';
+ $('trackedControls').classList.toggle('hidden',isTopTen||isGrading||isWishlist);
+ $('gradingPanel').classList.toggle('hidden',!isGrading);\n $('wishlistPanel').classList.toggle('hidden',!isWishlist);
+ $('list').classList.toggle('hidden',isGrading||isWishlist);
+ $('count').parentElement.classList.toggle('hidden',isGrading||isWishlist);
  $('trackedTab').classList.toggle('active',!isTopTen&&!isGrading);
  $('topTenTab').classList.toggle('active',isTopTen);
- $('gradingTab').classList.toggle('active',isGrading);
+ $('gradingTab').classList.toggle('active',isGrading);\n $('wishlistTab').classList.toggle('active',isWishlist);
  $('trackedTab').setAttribute('aria-selected',String(!isTopTen));
  $('topTenTab').setAttribute('aria-selected',String(isTopTen));
- $('gradingTab').setAttribute('aria-selected',String(isGrading));
+ $('gradingTab').setAttribute('aria-selected',String(isGrading));\n $('wishlistTab').setAttribute('aria-selected',String(isWishlist));
  $('listHeading').textContent=isTopTen?'Top 10 cards to purchase':'Tracked cards';
  if(isGrading)return;
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
@@ -1518,6 +1531,24 @@ function render(){
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
  $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img?`<div class="cardthumb-slot">${img}</div>`:""}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><div class="card-valuation"><div class="metrics compact-prices"><div class="metric"><span>RAW</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div></div><div class="valuation-bottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap-percent-stack"><span class="gap-title">PROFIT</span><span class="gap ${cl}">${g>=0?"+":""}${g.toFixed(1)}%</span></span></div><span class="signal ${cl}">${label}</span></div></div></div><div class="cardbottom"><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
 }
+function renderWishlist(){
+ const root=$('wishlistList');
+ if(!wishlist.length){root.innerHTML='<div class="empty">Your wishlist is empty. Add the cards you’re hunting for.</div>';return;}
+ root.innerHTML=wishlist.map(w=>'<article class="wishlist-item"><div><strong>'+esc(w.name)+'</strong>'+(w.set?'<span>'+esc(w.set)+'</span>':'')+'</div><div class="wishlist-meta">'+(w.targetPrice!==''&&w.targetPrice!=null?'<b>Target '+money(w.targetPrice)+'</b>':'<span>No target price</span>')+'<button type="button" data-wish-delete="'+esc(w.id)+'">Remove</button></div></article>').join('');
+}
+$('wishlistForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const name=$('wishName').value.trim(),set=$('wishSet').value.trim(),price=$('wishPrice').value.trim();
+ if(!name)return;
+ if(price!==''&&(!Number.isFinite(Number(price))||Number(price)<0)){notify('Enter a valid target price.');return;}
+ wishlist.unshift({id:'w-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name,set,targetPrice:price,createdAt:Date.now()});
+ if(await save()){$('wishlistForm').reset();notify('Added to your shared wishlist.');}
+});
+$('wishlistList').addEventListener('click',async e=>{
+ const btn=e.target.closest('[data-wish-delete]');if(!btn)return;
+ const old=wishlist;wishlist=wishlist.filter(w=>w.id!==btn.dataset.wishDelete);
+ if(await save())notify('Removed from your wishlist.');else wishlist=old;
+});
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
 function exportData(){let blob=new Blob([JSON.stringify({app:'PSA Index',version:3,exportedAt:new Date().toISOString(),cards},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='psa-index-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Backup exported.');}
@@ -1570,7 +1601,7 @@ $('viewToggle').onclick=()=>{
  $('viewToggle').textContent=thumbnailMode?'☷ List':'▦ Thumbnail';
  $('viewToggle').title=thumbnailMode?'Switch to list view':'Switch to thumbnail view';
 };
-$('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').onclick=()=>{activeTab='top10';render();};$('gradingTab').onclick=()=>{activeTab='grading';render();};
+$('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').onclick=()=>{activeTab='top10';render();};$('wishlistTab').onclick=()=>{activeTab='wishlist';render();};$('gradingTab').onclick=()=>{activeTab='grading';render();};
 let selectedDetailId=null;
 function showCardDetail(id,cardElement){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const modal=$('detailModal');modal.style.setProperty('--detail-photo',c.imageUrl?'url('+JSON.stringify(c.imageUrl)+')':'none');const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';const rect=cardElement?.getBoundingClientRect();if(rect){const top=Math.max(14,Math.min(rect.top,window.innerHeight-380));const left=Math.max(14,Math.min(rect.left+(rect.width-modal.offsetWidth)/2,window.innerWidth-modal.offsetWidth-14));modal.style.setProperty('--detail-top',top+'px');modal.style.setProperty('--detail-left',left+'px');}modal.showModal();}
 $('detailClose').onclick=()=>$('detailModal').close();$('detailDone').onclick=()=>$('detailModal').close();
