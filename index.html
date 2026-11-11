@@ -1149,6 +1149,93 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 }
 
 
+
+/* List mode: larger card photo aligned exactly with the RAW/PSA price panels
+   and the profit-gap panel, with the card title above on the right. */
+.cards:not(.thumbnail-mode) .card.has-photo{
+ display:grid!important;
+ grid-template-columns:116px minmax(0,1fr)!important;
+ grid-template-rows:auto auto!important;
+ column-gap:16px!important;
+ row-gap:8px!important;
+ align-items:stretch!important;
+ padding:14px!important;
+}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardthumb-slot{
+ display:block!important;
+ grid-column:1!important;
+ grid-row:2!important;
+ position:relative!important;
+ align-self:stretch!important;
+ justify-self:stretch!important;
+ width:116px!important;
+ min-width:116px!important;
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ overflow:hidden!important;
+}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardthumb-slot>.cardthumb{
+ display:block!important;
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ max-width:100%!important;
+ max-height:100%!important;
+ margin:0!important;
+ object-fit:contain!important;
+ border:1px solid var(--line)!important;
+ border-radius:9px!important;
+ padding:5px!important;
+}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardtop{display:contents!important}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.cardidentity{
+ grid-column:2!important;
+ grid-row:1!important;
+ align-self:end!important;
+ min-width:0!important;
+ padding:0 2px 2px!important;
+}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.card-valuation{
+ grid-column:2!important;
+ grid-row:2!important;
+ align-self:stretch!important;
+ width:100%!important;
+ min-width:0!important;
+ margin:0!important;
+}
+.cards:not(.thumbnail-mode) .card.has-photo>.cardbottom{
+ grid-column:2!important;
+ grid-row:3!important;
+ margin:0!important;
+ padding:0 2px 2px!important;
+}
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  grid-template-columns:92px minmax(0,1fr)!important;
+  column-gap:11px!important;
+  row-gap:7px!important;
+  padding:10px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb-slot{
+  width:92px!important;
+  min-width:92px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.cardidentity{padding:0 1px 2px!important}
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardtop>.card-valuation{gap:6px!important}
+}
+@media(max-width:520px){
+ .cards:not(.thumbnail-mode) .card.has-photo{
+  grid-template-columns:82px minmax(0,1fr)!important;
+  column-gap:9px!important;
+  padding:9px!important;
+ }
+ .cards:not(.thumbnail-mode) .card.has-photo>.cardthumb-slot{width:82px!important;min-width:82px!important}
+}
+
 /* Image slot: List mode keeps its existing grid behavior; Thumbnail mode sizes the slot from valuation only */
 .cards:not(.thumbnail-mode) .cardthumb-slot{display:contents!important}
 .cards.thumbnail-mode .card.has-photo>.cardthumb-slot{
