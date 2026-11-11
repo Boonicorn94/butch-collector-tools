@@ -26,7 +26,8 @@ export default async function handler(req, res) {
       if (!body || !Array.isArray(body.cards) || body.cards.length > 500 || (body.wishlist != null && (!Array.isArray(body.wishlist) || body.wishlist.length > 500))) {
         return res.status(400).json({ error: 'Invalid cards payload' });
       }
-      const cards = body.cards;\n      let wishlist = Array.isArray(body.wishlist) ? body.wishlist : [];
+      const cards = body.cards;
+      let wishlist = Array.isArray(body.wishlist) ? body.wishlist : [];
       const valid = cards.every(c =>
         c && typeof c.id === 'string' &&
         typeof c.name === 'string' && c.name.length <= 120 &&
@@ -34,7 +35,9 @@ export default async function handler(req, res) {
         Number.isFinite(Number(c.psa10)) && Number(c.psa10) >= 0 &&
         (c.imageUrl == null || (typeof c.imageUrl === 'string' && c.imageUrl.length <= 1500000))
       );
-      if (!valid) return res.status(400).json({ error: 'One or more cards are invalid' });\n      const validWishlist = wishlist.every(w => w && typeof w.id === 'string' && typeof w.name === 'string' && w.name.length <= 120 && (w.set == null || (typeof w.set === 'string' && w.set.length <= 120)) && (w.targetPrice == null || w.targetPrice === '' || (Number.isFinite(Number(w.targetPrice)) && Number(w.targetPrice) >= 0)));\n      if (!validWishlist) return res.status(400).json({ error: 'One or more wishlist items are invalid' });
+      if (!valid) return res.status(400).json({ error: 'One or more cards are invalid' });
+      const validWishlist = wishlist.every(w => w && typeof w.id === 'string' && typeof w.name === 'string' && w.name.length <= 120 && (w.set == null || (typeof w.set === 'string' && w.set.length <= 120)) && (w.targetPrice == null || w.targetPrice === '' || (Number.isFinite(Number(w.targetPrice)) && Number(w.targetPrice) >= 0)));
+      if (!validWishlist) return res.status(400).json({ error: 'One or more wishlist items are invalid' });
 
       await put(KEY, JSON.stringify({ cards, wishlist }), {
         access: 'public',
