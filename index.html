@@ -1348,6 +1348,54 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .cards:not(.thumbnail-mode).compact-mode .card.has-photo>.cardthumb-slot{width:64px!important;min-width:64px!important}
 }
 
+
+/* Improve valuation readability and clearly label the percentage as profit. */
+.cards:not(.thumbnail-mode) .card-valuation .metrics.compact-prices .metric b{
+ font-size:clamp(17px,1.55vw,21px)!important;
+ font-weight:800!important;
+}
+.cards:not(.thumbnail-mode) .valuation-bottom .gap-summary{
+ gap:clamp(12px,2vw,22px)!important;
+}
+.cards:not(.thumbnail-mode) .gap-percent-stack{
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:3px!important;
+}
+.cards:not(.thumbnail-mode) .gap-title{
+ display:block!important;
+ color:var(--muted)!important;
+ font:700 9px 'DM Mono',monospace!important;
+ letter-spacing:.14em!important;
+ line-height:1!important;
+}
+.cards:not(.thumbnail-mode) .valuation-bottom .gap{
+ font-size:clamp(13px,1.2vw,16px)!important;
+ line-height:1.1!important;
+}
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode) .card-valuation .metrics.compact-prices .metric b{
+  font-size:clamp(15px,3.8vw,19px)!important;
+ }
+ .cards:not(.thumbnail-mode) .gap-title{font-size:8px!important}
+ .cards:not(.thumbnail-mode) .valuation-bottom .gap{font-size:13px!important}
+}
+@media(max-width:520px){
+ .cards:not(.thumbnail-mode) .card-valuation .metrics.compact-prices .metric b{font-size:16px!important}
+ .cards:not(.thumbnail-mode) .valuation-bottom .gap{font-size:12px!important}
+}
+/* Keep compact list mode readable too, without losing its shorter height. */
+.cards:not(.thumbnail-mode).compact-mode .card-valuation .metrics.compact-prices .metric b{
+ font-size:15px!important;
+}
+.cards:not(.thumbnail-mode).compact-mode .valuation-bottom .gap-title{font-size:7px!important}
+.cards:not(.thumbnail-mode).compact-mode .valuation-bottom .gap{font-size:11px!important}
+@media(max-width:899px){
+ .cards:not(.thumbnail-mode).compact-mode .card-valuation .metrics.compact-prices .metric b{font-size:14px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1430,7 +1478,7 @@ function render(){
  $('avgGapModalCount').textContent='Based on '+cards.length+' tracked '+(cards.length===1?'card':'cards');
  $('count').textContent=isTopTen?shown.length+' / '+Math.min(cards.length,10):shown.length+' / '+cards.length;
  if(!shown.length){$('list').innerHTML='<div class="empty">'+(cards.length?'No matching cards.':'Your watchlist is empty. Add a card to begin.')+'</div>';return;}
- $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img?`<div class="cardthumb-slot">${img}</div>`:""}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><div class="card-valuation"><div class="metrics compact-prices"><div class="metric"><span>RAW</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div></div><div class="valuation-bottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap ${cl}">${g>=0?"+":""}${g.toFixed(1)}% GAP</span></div><span class="signal ${cl}">${label}</span></div></div></div><div class="cardbottom"><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
+ $('list').innerHTML=shown.map(c=>{let [cl,label]=signal(c),g=gap(c),d=Number(c.psa10)-Number(c.raw),img=(typeof c.imageUrl==='string'&&(/^https?:\/\//i.test(c.imageUrl)||/^data:image\/(jpeg|png|webp|gif);base64,/i.test(c.imageUrl)))?`<img class="cardthumb" src="${esc(c.imageUrl)}" alt="${esc(c.name)}" loading="lazy" onerror="this.style.display='none'">`:'';return `<article class="card ${cl} ${img?'has-photo':''}">${img?`<div class="cardthumb-slot">${img}</div>`:""}<div class="cardtop"><div class="cardidentity"><div><div class="cardname">${esc(c.name)}</div>${c.set?`<div class="set">${esc(c.set)}</div>`:''}</div></div><div class="card-valuation"><div class="metrics compact-prices"><div class="metric"><span>RAW</span><b>${money(c.raw)}</b></div><div class="metric"><span>PSA 10</span><b>${money(c.psa10)}</b></div></div><div class="valuation-bottom"><div class="gap-summary"><span class="gap-cash">${money(d)}</span><span class="gap-percent-stack"><span class="gap-title">PROFIT</span><span class="gap ${cl}">${g>=0?"+":""}${g.toFixed(1)}%</span></span></div><span class="signal ${cl}">${label}</span></div></div></div><div class="cardbottom"><div class="actions"><button data-edit="${esc(c.id)}">Edit</button><button data-delete="${esc(c.id)}">Delete</button></div></div></article>`;}).join('');
 }
 function openAdd(){$('form').reset();$('editId').value='';$('photoStatus').textContent='';$('modalTitle').textContent='Add card';$('modal').showModal();}
 function edit(id){let c=cards.find(x=>x.id===id);if(!c)return;$('editId').value=c.id;$('name').value=c.name;$('set').value=c.set||'';$('raw').value=c.raw;$('psa10').value=c.psa10;$('imageUrl').value=(c.imageUrl&&c.imageUrl.startsWith('data:'))?c.imageUrl:(c.imageUrl||'');$('photoStatus').textContent=c.imageUrl?'Image attached ✓':'No image selected';$('modalTitle').textContent='Edit card';$('modal').showModal();}
