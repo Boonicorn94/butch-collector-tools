@@ -1548,7 +1548,12 @@ $('photoFile').onchange=async e=>{
 // The former sidebar's info control was removed with the sidebar.
 $('close').onclick=()=>$('modal').close();$('cancel').onclick=()=>$('modal').close();
 $('search').oninput=render;$('sort').onchange=render;
-let thumbnailMode=false,compactMode=false;
+let thumbnailMode=false,compactMode=true;
+$('list').classList.add('compact-mode');
+$('densityToggle').classList.add('active');
+$('densityToggle').setAttribute('aria-pressed','true');
+$('densityToggle').textContent='↕ Spacious';
+$('densityToggle').title='Switch to spacious list cards';
 $('densityToggle').onclick=()=>{
  compactMode=!compactMode;
  $('list').classList.toggle('compact-mode',compactMode);
