@@ -1504,15 +1504,18 @@ async function save(){try{const r=await fetch('/api/cards',{method:'POST',header
 function render(){
  const isTopTen=activeTab==='top10',isGrading=activeTab==='grading',isWishlist=activeTab==='wishlist';
  $('trackedControls').classList.toggle('hidden',isTopTen||isGrading||isWishlist);
- $('gradingPanel').classList.toggle('hidden',!isGrading);\n $('wishlistPanel').classList.toggle('hidden',!isWishlist);
+ $('gradingPanel').classList.toggle('hidden',!isGrading); 
+ $('wishlistPanel').classList.toggle('hidden',!isWishlist);
  $('list').classList.toggle('hidden',isGrading||isWishlist);
  $('count').parentElement.classList.toggle('hidden',isGrading||isWishlist);
  $('trackedTab').classList.toggle('active',!isTopTen&&!isGrading);
  $('topTenTab').classList.toggle('active',isTopTen);
- $('gradingTab').classList.toggle('active',isGrading);\n $('wishlistTab').classList.toggle('active',isWishlist);
+ $('gradingTab').classList.toggle('active',isGrading); 
+ $('wishlistTab').classList.toggle('active',isWishlist);
  $('trackedTab').setAttribute('aria-selected',String(!isTopTen));
  $('topTenTab').setAttribute('aria-selected',String(isTopTen));
- $('gradingTab').setAttribute('aria-selected',String(isGrading));\n $('wishlistTab').setAttribute('aria-selected',String(isWishlist));
+ $('gradingTab').setAttribute('aria-selected',String(isGrading)); 
+ $('wishlistTab').setAttribute('aria-selected',String(isWishlist));
  $('listHeading').textContent=isTopTen?'Top 10 cards to purchase':'Tracked cards';
  if(isGrading)return;
  let q=$('search').value.trim().toLowerCase(),mode=$('sort').value,shown=cards.filter(c=>(c.name+' '+(c.set||'')).toLowerCase().includes(q));
