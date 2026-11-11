@@ -1307,6 +1307,7 @@ $('trackedTab').onclick=()=>{activeTab='tracked';render();};$('topTenTab').oncli
 let selectedDetailId=null;
 function showCardDetail(id,cardElement){const c=cards.find(x=>x.id===id);if(!c)return;selectedDetailId=id;const modal=$('detailModal');modal.style.setProperty('--detail-photo',c.imageUrl?'url('+JSON.stringify(c.imageUrl)+')':'none');const d=Number(c.psa10)-Number(c.raw),g=gap(c);$('detailName').textContent=c.name;$('detailSet').textContent=c.set||'Collector card';$('detailRaw').textContent=money(c.raw);$('detailPsa').textContent=money(c.psa10);$('detailCash').textContent=(d>=0?'+':'')+money(d);$('detailPercent').textContent=(g>=0?'+':'')+g.toFixed(1)+'%';const rect=cardElement?.getBoundingClientRect();if(rect){const top=Math.max(14,Math.min(rect.top,window.innerHeight-380));const left=Math.max(14,Math.min(rect.left+(rect.width-modal.offsetWidth)/2,window.innerWidth-modal.offsetWidth-14));modal.style.setProperty('--detail-top',top+'px');modal.style.setProperty('--detail-left',left+'px');}modal.showModal();}
 $('detailClose').onclick=()=>$('detailModal').close();$('detailDone').onclick=()=>$('detailModal').close();
+$('detailModal').addEventListener('click',e=>{if(e.target===$('detailModal'))$('detailModal').close();});
 const avgGapTrigger=$('averageGapTrigger'),avgGapModal=$('avgGapModal');
 function toggleAverageGap(){if(avgGapModal.open)avgGapModal.close();else avgGapModal.showModal();}
 avgGapTrigger.addEventListener('click',toggleAverageGap);
