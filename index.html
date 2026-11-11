@@ -1400,6 +1400,24 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
  .cards:not(.thumbnail-mode).compact-mode .card-valuation .metrics.compact-prices .metric b{font-size:14px!important}
 }
 
+
+/* Pin the PROFIT label to the top-left corner of the profit panel. */
+.cards:not(.thumbnail-mode) .valuation-bottom .gap-summary{position:relative!important}
+.cards:not(.thumbnail-mode) .gap-percent-stack{
+ position:static!important;
+ display:contents!important;
+}
+.cards:not(.thumbnail-mode) .gap-title{
+ position:absolute!important;
+ top:7px!important;
+ left:10px!important;
+ align-self:auto!important;
+ text-align:left!important;
+}
+.cards:not(.thumbnail-mode) .valuation-bottom .gap{
+ display:block!important;
+}
+
 </style>
 </head>
 <body>
