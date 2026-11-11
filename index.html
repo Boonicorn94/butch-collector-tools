@@ -1360,9 +1360,13 @@ h1{font-size:clamp(32px,4vw,46px);letter-spacing:-.065em}
 .cards:not(.thumbnail-mode) .gap-percent-stack{
  display:flex!important;
  flex-direction:column!important;
- align-items:center!important;
+ align-items:flex-start!important;
  justify-content:center!important;
  gap:3px!important;
+}
+.cards:not(.thumbnail-mode) .gap-title{
+ align-self:flex-start!important;
+ text-align:left!important;
 }
 .cards:not(.thumbnail-mode) .gap-title{
  display:block!important;
